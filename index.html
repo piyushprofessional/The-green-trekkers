@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="The Green Trekkers - login and signup for Sahyadri trekking bookings." />
-  <title>The Green Trekkers | Login & Signup</title>
+  <meta name="description" content="The Green Trekkers - customer login and signup for Sahyadri trekking bookings." />
+  <title>The Green Trekkers | Login</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="login-page">
@@ -31,15 +31,46 @@
         </div>
       </div>
 
-      <div class="form-card auth-form-wrap google-only-card">
-        <form id="googleOnlyLoginForm" class="auth-panel active" data-auth-panel="login" novalidate>
-          <span class="pill">Secure Google Login</span>
-          <h2>Sign in with Google</h2>
-          <p class="hint">Use your Google account to continue to trek bookings.</p>
-          <div class="social-login-box google-only-box" aria-label="Google login option">
-            <div id="googleButtonLogin" class="google-native-button" aria-label="Continue with Google"></div>
-          </div>
+      <div class="form-card auth-form-wrap">
+        <div class="auth-tabs" role="tablist" aria-label="Login and signup options">
+          <button type="button" class="auth-tab active" data-auth-tab="login">Login</button>
+          <button type="button" class="auth-tab" data-auth-tab="signup">Signup</button>
+        </div>
+
+        <form id="loginForm" class="auth-panel active" data-auth-panel="login" novalidate>
+          <span class="pill">Customer Login</span>
+          <h2>Welcome back</h2>
+          <p class="hint">Login with your email and password to book treks.</p>
+
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="email" placeholder="your@email.com" required />
+
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Minimum 8 characters" required />
+
+          <button class="primary-btn full-btn" type="submit">Login & View Treks</button>
           <p id="loginMessage" class="message" role="status"></p>
+        </form>
+
+        <form id="signupForm" class="auth-panel" data-auth-panel="signup" novalidate>
+          <span class="pill">Create Account</span>
+          <h2>Start your trekking journey</h2>
+          <p class="hint">Create an account to book batches and download tickets.</p>
+
+          <label for="signupName">Full Name</label>
+          <input id="signupName" type="text" autocomplete="name" placeholder="Your full name" required />
+
+          <label for="signupEmail">Email</label>
+          <input id="signupEmail" type="email" autocomplete="email" placeholder="your@email.com" required />
+
+          <label for="signupPhone">Phone Number</label>
+          <input id="signupPhone" type="tel" maxlength="10" autocomplete="tel" placeholder="10 digit mobile number" required />
+
+          <label for="signupPassword">Password</label>
+          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 characters" required />
+
+          <button class="primary-btn full-btn" type="submit">Create Account & View Treks</button>
+          <p id="signupMessage" class="message" role="status"></p>
         </form>
 
         <div class="demo-note">
@@ -49,7 +80,6 @@
     </section>
   </main>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="script.js"></script>
 </body>
 </html>

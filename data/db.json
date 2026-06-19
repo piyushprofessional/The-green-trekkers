@@ -1,14 +1,13 @@
 {
   "users": [
     {
-      "id": "U-1781849833571-3225",
-      "name": "Piyush Tamboli",
+      "id": "U-1781882585032-6277",
+      "name": "piyush",
       "email": "piyushtamboli041@gmail.com",
-      "phone": "",
-      "googleId": "103100968243487366847",
-      "authProvider": "google",
+      "phone": "9529452743",
+      "passwordHash": "$2a$12$0IBXA/bCN/LkpupQC8LR0uuRxJIczhuRMgwx5V8gTq4nOHUqsS/22",
       "role": "user",
-      "createdAt": "2026-06-19T06:17:13.571Z"
+      "createdAt": "2026-06-19T15:23:05.366Z"
     }
   ],
   "treks": [
@@ -105,28 +104,5 @@
       "price": 1799
     }
   ],
-  "bookings": [
-    {
-      "bookingId": "GT-260619-2897",
-      "trek": "Harishchandragad Trek",
-      "date": "13 July 2026",
-      "price": "₹2499",
-      "members": 20,
-      "amount": 2499,
-      "subtotal": 49980,
-      "couponCode": "",
-      "couponPercent": 0,
-      "discountAmount": 0,
-      "total": 49980,
-      "customerName": "piyush",
-      "email": "piyushtamboli041@gmail.com",
-      "phone": "9529452743",
-      "pickup": "Panvel",
-      "paymentMode": "Will Pay Later",
-      "paymentStatus": "Payment Pending",
-      "paymentScreenshot": "",
-      "bookedAt": "2026-06-19T06:18:25.965Z",
-      "userId": "U-1781849833571-3225"
-    }
-  ]
+  "bookings": []
 }

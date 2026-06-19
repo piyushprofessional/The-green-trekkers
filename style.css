@@ -1863,10 +1863,6 @@ html[data-theme="dark"] .modal-close { background:#102017; color:#fff; }
   box-shadow: var(--shadow-soft);
 }
 
-.social-login-btn.google {
-  color: #1f2937;
-}
-
 .divider {
   position: relative;
   display: grid;
@@ -1979,17 +1975,3 @@ html[data-theme="dark"] .coupon-card p {
 }
 
 
-/* Google OAuth button container */
-.google-native-button {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.google-native-button > div {
-  max-width: 100%;
-}
-.social-login-btn.setup-needed {
-  cursor: help;
-  opacity: 0.92;
-}
