@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Green Trekkers - login and signup for Sahyadri trekking bookings." />
+  <title>The Green Trekkers | Login & Signup</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+  <button id="themeToggle" class="theme-toggle auth-theme-toggle" type="button" aria-label="Switch theme">🌙 Dark</button>
+  <div class="animated-bg" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+  <main class="auth-shell">
+    <section class="auth-card reveal visible">
+      <div class="auth-brand">
+        <div class="logo-ring"><img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="main-logo" /></div>
+        <p class="eyebrow gold-text">Sahyadri Range</p>
+        <h1>The Green Trekkers</h1>
+        <p class="tagline">Trek. Explore. Preserve.</p>
+        <p class="brand-copy">Create an account, book upcoming batches, scan UPI QR, download your ticket and track your payment status.</p>
+        <div class="auth-contact-links" aria-label="Official The Green Trekkers links">
+          <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
+          <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+          <a href="mailto:thegreentrekkers5@gmail.com">Email</a>
+        </div>
+        <div class="quick-stats">
+          <div><strong>500+</strong><span>Trekkers</span></div>
+          <div><strong>25+</strong><span>Treks</span></div>
+          <div><strong>4.8★</strong><span>Rating</span></div>
+        </div>
+      </div>
+
+      <div class="form-card auth-form-wrap google-only-card">
+        <form id="googleOnlyLoginForm" class="auth-panel active" data-auth-panel="login" novalidate>
+          <span class="pill">Secure Google Login</span>
+          <h2>Sign in with Google</h2>
+          <p class="hint">Use your Google account to continue to trek bookings.</p>
+          <div class="social-login-box google-only-box" aria-label="Google login option">
+            <div id="googleButtonLogin" class="google-native-button" aria-label="Continue with Google"></div>
+          </div>
+          <p id="loginMessage" class="message" role="status"></p>
+        </form>
+
+        <div class="demo-note">
+          <strong>Business owner?</strong> <a href="admin-login.html">Open protected admin login</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin panel for The Green Trekkers to manage treks, batches, prices and booking payment status." />
+  <title>The Green Trekkers | Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <a href="treks.html" class="brand-link" aria-label="The Green Trekkers home">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" />
+      <span>The Green Trekkers</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="site-nav" id="siteNav">
+      <a href="treks.html" data-page="treks">Treks</a>
+      <a href="batches.html" data-page="batches">Booking</a>
+      <a href="gallery.html" data-page="gallery">Gallery</a>
+      <a href="locations.html" data-page="locations">Locations</a>
+      <a href="policy.html" data-page="policy">Policy</a>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙 Dark</button>
+      <span id="userBadge" class="user-badge"></span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container page-section admin-page">
+    <section class="section-heading compact reveal">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="title-logo" />
+      <p class="eyebrow">Admin Panel</p>
+      <h1>Manage Treks, Batches & Bookings</h1>
+      <p>Protected business admin panel. Only logged-in admin can view bookings, update payment status, and add treks or batches.</p>
+    </section>
+
+    <section id="adminDashboard" class="admin-dashboard hidden">
+      <div class="admin-actions reveal">
+        <button id="adminLogoutBtn" class="logout-btn" type="button">Admin Logout</button>
+        <button id="refreshAdminBtn" class="secondary-btn" type="button">Refresh Data</button>
+        <button id="exportBookingsBtn" class="secondary-btn" type="button">Export Bookings CSV</button>
+      </div>
+
+      <section class="admin-grid reveal">
+        <form id="adminTrekForm" class="admin-card" novalidate>
+          <span class="pill">Add Trek</span>
+          <h2>Add New Trek</h2>
+          <label for="adminTrekName">Trek Name</label>
+          <input id="adminTrekName" placeholder="Example: Visapur Fort Trek" required />
+          <label for="adminTrekDifficulty">Difficulty</label>
+          <select id="adminTrekDifficulty" required><option>Beginner</option><option>Moderate</option><option>Difficult</option><option>Adventure</option></select>
+          <label for="adminTrekDuration">Duration</label>
+          <input id="adminTrekDuration" placeholder="1 Day / 1 Night" required />
+          <label for="adminTrekDesc">Description</label>
+          <input id="adminTrekDesc" placeholder="Short description" required />
+          <button class="primary-btn full-btn" type="submit">Save Trek</button>
+          <p id="adminTrekMessage" class="message"></p>
+        </form>
+
+        <form id="adminBatchForm" class="admin-card" novalidate>
+          <span class="pill">Add Batch</span>
+          <h2>Add Batch Date & Price</h2>
+          <label for="adminBatchTrek">Trek Name</label>
+          <input id="adminBatchTrek" placeholder="Example: Visapur Fort Trek" required />
+          <label for="adminBatchDate">Batch Date</label>
+          <input id="adminBatchDate" placeholder="15 August 2026" required />
+          <label for="adminBatchSeats">Seats</label>
+          <input id="adminBatchSeats" type="number" min="1" value="20" required />
+          <label for="adminBatchPrice">Price</label>
+          <input id="adminBatchPrice" type="number" min="100" value="1499" required />
+          <button class="primary-btn full-btn" type="submit">Save Batch</button>
+          <p id="adminBatchMessage" class="message"></p>
+        </form>
+      </section>
+
+      <section class="admin-table-card reveal">
+        <div class="admin-table-head"><div><p class="eyebrow">Bookings</p><h2>Booking List & Payment Status</h2></div><p id="backendStatus" class="backend-status">Backend: checking...</p></div>
+        <div class="table-scroll"><table class="batch-table admin-table"><thead><tr><th>Booking ID</th><th>Name</th><th>Trek</th><th>Date</th><th>Total</th><th>Coupon</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminBookingBody"></tbody></table></div>
+      </section>
+
+      <section class="admin-grid reveal">
+        <div class="admin-card"><p class="eyebrow">Saved Treks</p><h2>Treks</h2><div id="adminTreksList" class="admin-list"></div></div>
+        <div class="admin-card"><p class="eyebrow">Saved Batches</p><h2>Batches</h2><div id="adminBatchesList" class="admin-list"></div></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-contact">
+      <p>© 2026 The Green Trekkers. Trek. Explore. Preserve.</p>
+      <div class="footer-links" aria-label="The Green Trekkers contact links">
+        <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
+        <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:thegreentrekkers5@gmail.com">thegreentrekkers5@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
