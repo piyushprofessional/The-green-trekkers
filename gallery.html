@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Gallery of The Green Trekkers trek memories, camping, waterfalls and Sahyadri trails." />
+  <title>The Green Trekkers | Gallery</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <a href="treks.html" class="brand-link" aria-label="The Green Trekkers home">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" />
+      <span>The Green Trekkers</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="site-nav" id="siteNav">
+      <a href="treks.html" data-page="treks">Treks</a>
+      <a href="batches.html" data-page="batches">Booking</a>
+      <a href="gallery.html" data-page="gallery">Gallery</a>
+      <a href="locations.html" data-page="locations">Locations</a>
+      <a href="policy.html" data-page="policy">Policy</a>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙 Dark</button>
+      <span id="userBadge" class="user-badge"></span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container page-section">
+    <section class="section-heading compact reveal">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="title-logo" />
+      <p class="eyebrow">Photo Gallery</p>
+      <h1>Trek Memories & Adventure Moments</h1>
+      <p>Show your past trek photos, group memories, waterfalls, forts, sunrise points and camping moments here.</p>
+    </section>
+
+    <section class="gallery-filter reveal" aria-label="Gallery filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="fort">Forts</button>
+      <button class="filter-btn" data-filter="waterfall">Waterfalls</button>
+      <button class="filter-btn" data-filter="camping">Camping</button>
+      <button class="filter-btn" data-filter="group">Group</button>
+    </section>
+
+    <section class="gallery-grid reveal" id="galleryGrid">
+      <article class="gallery-card poster-card" data-category="group" data-caption="Official group poster - The Green Trekkers"><img src="assets/green-trekkers-poster.jpeg" alt="The Green Trekkers official poster"><span>Official Poster</span></article>
+      <article class="gallery-card scenic fort" data-category="fort" data-caption="Rajmachi fort trail under cloudy Sahyadri sky"><div>🌙</div><span>Rajmachi Night Trek</span></article>
+      <article class="gallery-card scenic waterfall" data-category="waterfall" data-caption="Devkund waterfall trail memories"><div>💧</div><span>Devkund Waterfall</span></article>
+      <article class="gallery-card scenic camping" data-category="camping" data-caption="Sandhan Valley camping and stargazing"><div>🏕️</div><span>Sandhan Camping</span></article>
+      <article class="gallery-card scenic fort" data-category="fort" data-caption="Harishchandragad Konkan Kada sunrise view"><div>🌄</div><span>Konkan Kada Sunrise</span></article>
+      <article class="gallery-card scenic waterfall" data-category="waterfall" data-caption="Andharban misty jungle trail"><div>🌿</div><span>Andharban Forest</span></article>
+      <article class="gallery-card scenic group" data-category="group" data-caption="Happy trekkers after summit"><div>🥾</div><span>Summit Group Photo</span></article>
+      <article class="gallery-card scenic camping" data-category="camping" data-caption="Campfire night with safe trekking batch"><div>🔥</div><span>Campfire Night</span></article>
+    </section>
+
+    <section class="upload-gallery-card reveal">
+      <div>
+        <p class="eyebrow">Add Your Photos</p>
+        <h2>Gallery Upload Demo</h2>
+        <p>Upload photos locally for your project demo. They will preview in your browser.</p>
+      </div>
+      <label class="file-drop" for="galleryUpload">📸 Choose Gallery Photos</label>
+      <input id="galleryUpload" type="file" accept="image/*" multiple hidden />
+      <div id="uploadedGallery" class="uploaded-gallery"></div>
+    </section>
+  </main>
+
+  <div id="galleryModal" class="gallery-modal hidden" role="dialog" aria-modal="true" aria-label="Gallery image preview">
+    <button id="closeGalleryModal" class="modal-close" type="button">×</button>
+    <div id="galleryModalContent" class="gallery-modal-content"></div>
+    <p id="galleryCaption"></p>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-contact">
+      <p>© 2026 The Green Trekkers. Trek. Explore. Preserve.</p>
+      <div class="footer-links" aria-label="The Green Trekkers contact links">
+        <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
+        <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:thegreentrekkers5@gmail.com">thegreentrekkers5@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

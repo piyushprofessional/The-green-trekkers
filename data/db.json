@@ -1,0 +1,132 @@
+{
+  "users": [
+    {
+      "id": "U-1781849833571-3225",
+      "name": "Piyush Tamboli",
+      "email": "piyushtamboli041@gmail.com",
+      "phone": "",
+      "googleId": "103100968243487366847",
+      "authProvider": "google",
+      "role": "user",
+      "createdAt": "2026-06-19T06:17:13.571Z"
+    }
+  ],
+  "treks": [
+    {
+      "id": "T-RAJ",
+      "name": "Rajmachi Fort Trek",
+      "difficulty": "Beginner",
+      "duration": "1 Day / 1 Night",
+      "description": "Night trail near Lonavala with fireflies and forest route."
+    },
+    {
+      "id": "T-KAL",
+      "name": "Kalsubai Peak Trek",
+      "difficulty": "Moderate",
+      "duration": "1 Day",
+      "description": "Maharashtra's highest peak with sunrise views."
+    },
+    {
+      "id": "T-DEV",
+      "name": "Devkund Waterfall Trek",
+      "difficulty": "Beginner",
+      "duration": "1 Day",
+      "description": "Jungle trail ending at a waterfall."
+    },
+    {
+      "id": "T-HAR",
+      "name": "Harishchandragad Trek",
+      "difficulty": "Difficult",
+      "duration": "2 Days",
+      "description": "Konkan Kada, caves and sunrise route."
+    },
+    {
+      "id": "T-SAN",
+      "name": "Sandhan Valley Trek",
+      "difficulty": "Adventure",
+      "duration": "2 Days",
+      "description": "Camping, valley route and adventure patches."
+    },
+    {
+      "id": "T-AND",
+      "name": "Andharban Jungle Trek",
+      "difficulty": "Moderate",
+      "duration": "1 Day",
+      "description": "Descending forest trek with mist and waterfalls."
+    }
+  ],
+  "batches": [
+    {
+      "id": "B-RAJ-01",
+      "trek": "Rajmachi Fort Trek",
+      "note": "Night trail + fireflies",
+      "date": "22 June 2026",
+      "seats": 18,
+      "price": 1299
+    },
+    {
+      "id": "B-KAL-01",
+      "trek": "Kalsubai Peak Trek",
+      "note": "Highest peak of Maharashtra",
+      "date": "29 June 2026",
+      "seats": 12,
+      "price": 1599
+    },
+    {
+      "id": "B-DEV-01",
+      "trek": "Devkund Waterfall Trek",
+      "note": "Forest walk + waterfall",
+      "date": "06 July 2026",
+      "seats": 20,
+      "price": 1499
+    },
+    {
+      "id": "B-HAR-01",
+      "trek": "Harishchandragad Trek",
+      "note": "Konkan Kada sunrise",
+      "date": "13 July 2026",
+      "seats": 10,
+      "price": 2499
+    },
+    {
+      "id": "B-SAN-01",
+      "trek": "Sandhan Valley Trek",
+      "note": "Camping + adventure trail",
+      "date": "20 July 2026",
+      "seats": 14,
+      "price": 2999
+    },
+    {
+      "id": "B-AND-01",
+      "trek": "Andharban Jungle Trek",
+      "note": "Mist, forest + waterfall trail",
+      "date": "27 July 2026",
+      "seats": 16,
+      "price": 1799
+    }
+  ],
+  "bookings": [
+    {
+      "bookingId": "GT-260619-2897",
+      "trek": "Harishchandragad Trek",
+      "date": "13 July 2026",
+      "price": "₹2499",
+      "members": 20,
+      "amount": 2499,
+      "subtotal": 49980,
+      "couponCode": "",
+      "couponPercent": 0,
+      "discountAmount": 0,
+      "total": 49980,
+      "customerName": "piyush",
+      "email": "piyushtamboli041@gmail.com",
+      "phone": "9529452743",
+      "pickup": "Panvel",
+      "paymentMode": "Will Pay Later",
+      "paymentStatus": "Payment Pending",
+      "paymentScreenshot": "",
+      "bookedAt": "2026-06-19T06:18:25.965Z",
+      "userId": "U-1781849833571-3225"
+    }
+  ]
+}

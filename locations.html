@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Trek route details, pickup points and map links for The Green Trekkers." />
+  <title>The Green Trekkers | Locations</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <a href="treks.html" class="brand-link" aria-label="The Green Trekkers home">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" />
+      <span>The Green Trekkers</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="site-nav" id="siteNav">
+      <a href="treks.html" data-page="treks">Treks</a>
+      <a href="batches.html" data-page="batches">Booking</a>
+      <a href="gallery.html" data-page="gallery">Gallery</a>
+      <a href="locations.html" data-page="locations">Locations</a>
+      <a href="policy.html" data-page="policy">Policy</a>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙 Dark</button>
+      <span id="userBadge" class="user-badge"></span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container page-section">
+    <section class="section-heading compact reveal">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="title-logo" />
+      <p class="eyebrow">Route & Maps</p>
+      <h1>Trek Locations, Start Points & Pickup Points</h1>
+      <p>Each trek includes route guidance, pickup point details and Google Maps links for easy coordination.</p>
+    </section>
+
+    <section class="map-layout reveal">
+      <div class="pickup-card">
+        <p class="eyebrow">Pickup Points</p>
+        <h2>Common Pickup Locations</h2>
+        <ul class="check-list">
+          <li>Dadar - Pritam Hotel Circle</li>
+          <li>Thane - Teen Hath Naka</li>
+          <li>Panvel - McDonald's Point</li>
+          <li>Pune Station - Main Gate</li>
+        </ul>
+        <a class="primary-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/Dadar+Thane+Panvel+Pune+Station">Open Pickup Map</a>
+      </div>
+      <div class="map-embed">
+        <iframe title="Sahyadri trekking map" loading="lazy" src="https://www.google.com/maps?q=Sahyadri%20Maharashtra&output=embed"></iframe>
+      </div>
+    </section>
+
+    <section class="location-grid reveal">
+      <article><span>🌙</span><h3>Rajmachi Fort</h3><p>Base: Lonavala / Udhewadi</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Rajmachi+Fort">Google Maps →</a></article>
+      <article><span>⛰️</span><h3>Kalsubai Peak</h3><p>Base: Bari Village</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Kalsubai+Peak+Bari+Village">Google Maps →</a></article>
+      <article><span>💧</span><h3>Devkund Waterfall</h3><p>Base: Bhira Village</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Devkund+Waterfall+Bhira">Google Maps →</a></article>
+      <article><span>🌄</span><h3>Harishchandragad</h3><p>Base: Khireshwar / Pachnai</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Harishchandragad+Trek">Google Maps →</a></article>
+      <article><span>🏕️</span><h3>Sandhan Valley</h3><p>Base: Samrad Village</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Sandhan+Valley+Samrad">Google Maps →</a></article>
+      <article><span>🌿</span><h3>Andharban</h3><p>Base: Pimpri / Tamhini</p><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/Andharban+Trek">Google Maps →</a></article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-contact">
+      <p>© 2026 The Green Trekkers. Trek. Explore. Preserve.</p>
+      <div class="footer-links" aria-label="The Green Trekkers contact links">
+        <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
+        <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:thegreentrekkers5@gmail.com">thegreentrekkers5@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

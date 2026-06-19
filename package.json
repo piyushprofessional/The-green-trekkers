@@ -1,0 +1,22 @@
+{
+  "name": "green-trekkers-client-ready",
+  "version": "3.0.0",
+  "description": "Client-ready trekking booking website for The Green Trekkers with Google login, admin dashboard, private coupons and secure Node.js backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check script.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.13",
+    "google-auth-library": "^9.15.1"
+  }
+}

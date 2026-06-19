@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Green Trekkers batch dates, prices, UPI payment QR code and booking confirmation." />
+  <title>The Green Trekkers | Batches & Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <a href="treks.html" class="brand-link" aria-label="The Green Trekkers home">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" />
+      <span>The Green Trekkers</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="site-nav" id="siteNav">
+      <a href="treks.html" data-page="treks">Treks</a>
+      <a href="batches.html" data-page="batches">Booking</a>
+      <a href="gallery.html" data-page="gallery">Gallery</a>
+      <a href="locations.html" data-page="locations">Locations</a>
+      <a href="policy.html" data-page="policy">Policy</a>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙 Dark</button>
+      <span id="userBadge" class="user-badge"></span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container page-section">
+    <section class="section-heading compact reveal">
+      <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="title-logo" />
+      <p class="eyebrow">Upcoming Batches</p>
+      <h1>Trekking Batch Dates, Price & Booking</h1>
+      <p>Select a trek batch, scan the UPI QR code and confirm your booking.</p>
+    </section>
+
+    <section class="impact-strip reveal" aria-label="The Green Trekkers achievements">
+      <article>
+        <strong><span class="counter" data-target="500">0</span>+</strong>
+        <p>Happy Trekkers</p>
+      </article>
+      <article>
+        <strong><span class="counter" data-target="25">0</span>+</strong>
+        <p>Treks Completed</p>
+      </article>
+      <article>
+        <strong><span class="counter" data-target="15">0</span>+</strong>
+        <p>Expert Leaders</p>
+      </article>
+      <article>
+        <strong><span class="counter" data-target="48" data-decimal="true">0</span>/5</strong>
+        <p>Average Rating</p>
+      </article>
+    </section>
+
+    <section class="batch-wrapper reveal" aria-label="Upcoming trek batches">
+      <div class="table-scroll">
+        <table class="batch-table">
+          <thead>
+            <tr>
+              <th>Trek Name</th>
+              <th>Date</th>
+              <th>Seats</th>
+              <th>Price</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="batchTableBody">
+            <tr>
+              <td><strong>Rajmachi Fort Trek</strong><span>Night trail + fireflies</span></td>
+              <td>22 June 2026</td>
+              <td>18</td>
+              <td>₹1,299</td>
+              <td><button class="book-btn" data-trek="Rajmachi Fort Trek" data-date="22 June 2026" data-price="₹1,299" data-amount="1299">Book Now</button></td>
+            </tr>
+            <tr>
+              <td><strong>Kalsubai Peak Trek</strong><span>Highest peak of Maharashtra</span></td>
+              <td>29 June 2026</td>
+              <td>12</td>
+              <td>₹1,599</td>
+              <td><button class="book-btn" data-trek="Kalsubai Peak Trek" data-date="29 June 2026" data-price="₹1,599" data-amount="1599">Book Now</button></td>
+            </tr>
+            <tr>
+              <td><strong>Devkund Waterfall Trek</strong><span>Forest walk + waterfall</span></td>
+              <td>06 July 2026</td>
+              <td>20</td>
+              <td>₹1,499</td>
+              <td><button class="book-btn" data-trek="Devkund Waterfall Trek" data-date="06 July 2026" data-price="₹1,499" data-amount="1499">Book Now</button></td>
+            </tr>
+            <tr>
+              <td><strong>Harishchandragad Trek</strong><span>Konkan Kada sunrise</span></td>
+              <td>13 July 2026</td>
+              <td>10</td>
+              <td>₹2,499</td>
+              <td><button class="book-btn" data-trek="Harishchandragad Trek" data-date="13 July 2026" data-price="₹2,499" data-amount="2499">Book Now</button></td>
+            </tr>
+            <tr>
+              <td><strong>Sandhan Valley Trek</strong><span>Camping + adventure trail</span></td>
+              <td>20 July 2026</td>
+              <td>14</td>
+              <td>₹2,999</td>
+              <td><button class="book-btn" data-trek="Sandhan Valley Trek" data-date="20 July 2026" data-price="₹2,999" data-amount="2999">Book Now</button></td>
+            </tr>
+            <tr>
+              <td><strong>Andharban Jungle Trek</strong><span>Mist, forest + waterfall trail</span></td>
+              <td>27 July 2026</td>
+              <td>16</td>
+              <td>₹1,799</td>
+              <td><button class="book-btn" data-trek="Andharban Jungle Trek" data-date="27 July 2026" data-price="₹1,799" data-amount="1799">Book Now</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mobile-batches reveal" aria-label="Mobile batch cards">
+      <article class="batch-mini-card"><span>Rajmachi Fort Trek</span><b>22 June 2026</b><p>₹1,299 • 18 seats</p><button class="book-btn" data-trek="Rajmachi Fort Trek" data-date="22 June 2026" data-price="₹1,299" data-amount="1299">Book Now</button></article>
+      <article class="batch-mini-card"><span>Kalsubai Peak Trek</span><b>29 June 2026</b><p>₹1,599 • 12 seats</p><button class="book-btn" data-trek="Kalsubai Peak Trek" data-date="29 June 2026" data-price="₹1,599" data-amount="1599">Book Now</button></article>
+      <article class="batch-mini-card"><span>Devkund Waterfall Trek</span><b>06 July 2026</b><p>₹1,499 • 20 seats</p><button class="book-btn" data-trek="Devkund Waterfall Trek" data-date="06 July 2026" data-price="₹1,499" data-amount="1499">Book Now</button></article>
+      <article class="batch-mini-card"><span>Harishchandragad Trek</span><b>13 July 2026</b><p>₹2,499 • 10 seats</p><button class="book-btn" data-trek="Harishchandragad Trek" data-date="13 July 2026" data-price="₹2,499" data-amount="2499">Book Now</button></article>
+      <article class="batch-mini-card"><span>Sandhan Valley Trek</span><b>20 July 2026</b><p>₹2,999 • 14 seats</p><button class="book-btn" data-trek="Sandhan Valley Trek" data-date="20 July 2026" data-price="₹2,999" data-amount="2999">Book Now</button></article>
+      <article class="batch-mini-card"><span>Andharban Jungle Trek</span><b>27 July 2026</b><p>₹1,799 • 16 seats</p><button class="book-btn" data-trek="Andharban Jungle Trek" data-date="27 July 2026" data-price="₹1,799" data-amount="1799">Book Now</button></article>
+    </section>
+
+    <section class="booking-layout">
+      <form id="bookingForm" class="booking-card reveal" novalidate>
+        <span class="pill">Secure your seat</span>
+        <h2>Booking Confirmation</h2>
+        <p class="hint">Click “Book Now” from the table or fill the details manually.</p>
+
+        <div class="form-row">
+          <div>
+            <label for="selectedTrek">Selected Trek</label>
+            <input type="text" id="selectedTrek" placeholder="Selected trek name" required />
+          </div>
+          <div>
+            <label for="selectedDate">Batch Date</label>
+            <input type="text" id="selectedDate" placeholder="Batch date" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="selectedPrice">Price Per Person</label>
+            <input type="text" id="selectedPrice" placeholder="Price" required />
+            <input type="hidden" id="selectedAmount" value="0" />
+          </div>
+          <div>
+            <label for="members">Members</label>
+            <input type="number" id="members" min="1" max="10" value="1" required />
+          </div>
+        </div>
+
+        <!-- Coupon input is intentionally hidden for client/public use. -->
+        <input type="hidden" id="couponCode" value="" />
+        <small id="couponMessage" class="upload-note hidden" aria-live="polite"></small>
+
+        <div class="form-row">
+          <div>
+            <label for="customerName">Your Name</label>
+            <input type="text" id="customerName" placeholder="Enter full name" required />
+          </div>
+          <div>
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="10 digit mobile number" pattern="[0-9]{10}" required />
+          </div>
+        </div>
+
+        <label for="pickup">Pickup Point</label>
+        <select id="pickup" required>
+          <option value="">Select pickup point</option>
+          <option>Dadar</option>
+          <option>Thane</option>
+          <option>Panvel</option>
+          <option>Pune Station</option>
+        </select>
+
+        <section class="payment-card" aria-label="Payment option">
+          <div class="payment-head">
+            <div>
+              <p class="eyebrow">Payment Option</p>
+              <h3>Scan UPI QR Code</h3>
+              <p>Pay with Google Pay, PhonePe, Paytm or any UPI app.</p>
+            </div>
+            <div class="amount-box">
+              <span>Total Amount</span>
+              <strong id="totalAmount">₹0</strong>
+            </div>
+          </div>
+
+          <div class="qr-layout">
+            <div class="qr-card">
+              <img src="assets/upi-payment-qr.jpeg" alt="UPI QR code for The Green Trekkers payment" class="upi-qr" />
+              <span>Scan & Pay</span>
+            </div>
+            <div class="payment-steps">
+              <p><strong>Step 1:</strong> Select trek batch and number of members.</p>
+              <p><strong>Step 2:</strong> Scan this QR code with any UPI app.</p>
+              <p><strong>Step 3:</strong> Select payment status and confirm booking.</p>
+              <label for="paymentMode">Payment Status</label>
+              <select id="paymentMode" required>
+                <option value="">Select payment status</option>
+                <option>UPI Payment Done</option>
+                <option>Will Pay Later</option>
+              </select>
+
+              <label for="paymentScreenshot">Upload Payment Screenshot</label>
+              <input type="file" id="paymentScreenshot" accept="image/*" />
+              <small id="screenshotName" class="upload-note">Optional for “Will Pay Later”. Required after UPI payment.</small>
+            </div>
+          </div>
+        </section>
+
+        <input type="hidden" id="bookingId" />
+
+        <section class="live-summary" aria-label="Live booking summary">
+          <div class="summary-head">
+            <span>🧾</span>
+            <div>
+              <p class="eyebrow">Real Booking Summary</p>
+              <h3>Your booking details</h3>
+            </div>
+          </div>
+          <dl class="summary-grid">
+            <div><dt>Booking ID</dt><dd id="summaryBookingId">GT-0000</dd></div>
+            <div><dt>Name</dt><dd id="summaryName">Not entered</dd></div>
+            <div><dt>Selected Trek</dt><dd id="summaryTrek">Not selected</dd></div>
+            <div><dt>Batch Date</dt><dd id="summaryDate">Not selected</dd></div>
+            <div><dt>Members</dt><dd id="summaryMembers">1</dd></div>
+            <div><dt>Payment Method</dt><dd id="summaryPayment">Not selected</dd></div>
+            <div><dt>Total Price</dt><dd id="summaryTotal">₹0</dd></div>
+            <div><dt>Screenshot</dt><dd id="summaryScreenshot">Not uploaded</dd></div>
+            <div><dt>Payment Status</dt><dd id="summaryPaymentStatus">Pending</dd></div>
+          </dl>
+        </section>
+
+        <button type="submit" class="primary-btn full-btn">Confirm Booking</button>
+        <p id="bookingMessage" class="message" role="status"></p>
+      </form>
+
+      <aside class="booking-side reveal">
+        <div class="side-banner">
+          <img src="assets/green-trekkers-poster.jpeg" alt="The Green Trekkers poster" />
+          <div class="side-overlay">
+            <span>🌄</span>
+            <strong>Next adventure is waiting</strong>
+            <p>Limited seats. Confirm early.</p>
+          </div>
+        </div>
+
+        <div id="confirmationBox" class="confirmation-box hidden">
+          <h2>✅ Booking Confirmed</h2>
+          <p id="confirmationText"></p>
+          <a id="whatsappBtn" class="primary-btn full-btn whatsapp-btn hidden" href="#" target="_blank" rel="noopener">Open WhatsApp Channel</a>
+          <button id="downloadTicketBtn" class="secondary-btn full-btn hidden" type="button">Download PDF Ticket</button>
+          <button id="newBookingBtn" class="secondary-btn" type="button">Make New Booking</button>
+        </div>
+      </aside>
+    </section>
+    <section class="reviews-section reveal" aria-label="Trekker reviews">
+      <div class="section-heading compact">
+        <p class="eyebrow">Testimonials</p>
+        <h2>Trekkers Love Our Batches</h2>
+        <p>Realistic review cards make the website feel trusted and professional.</p>
+      </div>
+      <div class="reviews-grid">
+        <article>
+          <div class="stars">★★★★★</div>
+          <p>“Rajmachi night trek was safe, energetic and beautifully managed. The leader guided beginners very well.”</p>
+          <strong>— Aditi, Mumbai</strong>
+        </article>
+        <article>
+          <div class="stars">★★★★★</div>
+          <p>“Loved the eco-friendly rules and group vibe. Payment and confirmation process was very smooth.”</p>
+          <strong>— Rohan, Pune</strong>
+        </article>
+        <article>
+          <div class="stars">★★★★☆</div>
+          <p>“Kalsubai sunrise was unforgettable. Good support, pickup coordination and amazing memories.”</p>
+          <strong>— Sneha, Thane</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="safety-section reveal" aria-label="Trek safety rules">
+      <div>
+        <p class="eyebrow">Safety First</p>
+        <h2>Trek Safety & Rules</h2>
+        <p>These points help visitors trust your trekking group before booking.</p>
+      </div>
+      <div class="safety-grid">
+        <article><span>🧭</span><h3>Leader Support</h3><p>Every batch has experienced trek leaders and route guidance.</p></article>
+        <article><span>🩹</span><h3>First Aid</h3><p>Basic first-aid support is carried for small injuries and emergencies.</p></article>
+        <article><span>🥾</span><h3>Proper Gear</h3><p>Trekking shoes, rainwear, water bottle and torch are recommended.</p></article>
+        <article><span>🍃</span><h3>No Littering</h3><p>Carry waste back, avoid plastic and respect the Sahyadri trails.</p></article>
+      </div>
+    </section>
+
+    <section class="faq-section reveal" aria-label="Frequently asked questions">
+      <div class="section-heading compact">
+        <p class="eyebrow">FAQ</p>
+        <h2>Common Questions</h2>
+        <p>Quick answers for beginners before they book a trek.</p>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>What should I carry?</summary>
+          <p>Carry trekking shoes, 2 litres of water, snacks, rainwear, torch, personal medicines and a small backpack.</p>
+        </details>
+        <details>
+          <summary>Is food included?</summary>
+          <p>Food depends on the trek package. You can confirm the exact inclusions on WhatsApp before payment.</p>
+        </details>
+        <details>
+          <summary>Is transport included?</summary>
+          <p>Pickup points are available from selected locations like Dadar, Thane, Panvel and Pune Station.</p>
+        </details>
+        <details>
+          <summary>Can beginners join?</summary>
+          <p>Yes, beginners can join easy and moderate treks. Difficult treks need basic stamina and prior trekking comfort.</p>
+        </details>
+        <details>
+          <summary>What is the refund policy?</summary>
+          <p>Refund and batch transfer rules depend on cancellation time. Contact support before cancelling. Read the full policy page for details.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="support-section reveal" aria-label="Help and support">
+      <div>
+        <p class="eyebrow">Help & Support</p>
+        <h2>Need help with booking?</h2>
+        <p>Contact The Green Trekkers for trek details, payment confirmation or batch availability.</p>
+      </div>
+      <div class="support-cards">
+        <a href="mailto:thegreentrekkers5@gmail.com">📧 thegreentrekkers5@gmail.com</a>
+        <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">💬 WhatsApp Channel</a>
+        <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">📸 Instagram</a>
+      </div>
+    </section>
+  </main>
+
+  <a href="#bookingForm" class="floating-book">Pay & Book</a>
+
+  <footer class="site-footer">
+    <div class="footer-contact">
+      <p>© 2026 The Green Trekkers. Trek. Explore. Preserve.</p>
+      <div class="footer-links" aria-label="The Green Trekkers contact links">
+        <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
+        <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:thegreentrekkers5@gmail.com">thegreentrekkers5@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
