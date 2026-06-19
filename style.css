@@ -1975,3 +1975,43 @@ html[data-theme="dark"] .coupon-card p {
 }
 
 
+/* Google OAuth button container */
+.google-native-button {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.google-native-button > div {
+  max-width: 100%;
+}
+.social-login-btn.setup-needed {
+  cursor: help;
+  opacity: 0.92;
+}
+
+
+/* Availability styles */
+.tag.available { background: #dcfce7; color: #166534; }
+.tag.unavailable { background: #e5e7eb; color: #374151; }
+.unavailable-card { opacity: 0.72; }
+.unavailable-card:hover { transform: none; box-shadow: var(--shadow-soft); }
+.unavailable-link { color: #6b7280; cursor: not-allowed; }
+.unavailable-btn,
+.unavailable-btn:hover,
+.book-btn:disabled {
+  background: #d1d5db !important;
+  color: #374151 !important;
+  border-color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.unavailable-row { opacity: 0.76; }
+.unavailable-row:hover { background: rgba(229, 231, 235, 0.36); }
+html[data-theme="dark"] .tag.unavailable { background: rgba(148, 163, 184, .24); color: #d1d5db; }
+html[data-theme="dark"] .unavailable-btn,
+html[data-theme="dark"] .unavailable-btn:hover,
+html[data-theme="dark"] .book-btn:disabled { background: rgba(148, 163, 184, .28) !important; color: #e5e7eb !important; }
+
+
