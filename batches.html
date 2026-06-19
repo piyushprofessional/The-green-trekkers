@@ -36,8 +36,8 @@
     <section class="section-heading compact reveal">
       <img src="assets/green-trekkers-logo.jpeg" alt="The Green Trekkers logo" class="title-logo" />
       <p class="eyebrow">Upcoming Batches</p>
-      <h1>Trekking Batch Dates, Price & Booking</h1>
-      <p>Select a trek batch, scan the UPI QR code and confirm your booking.</p>
+      <h1>Trek Batches, Price & Booking</h1>
+      <p>Harishchandragad booking is open for 04 July at 11:00 PM. Other trek options are visible but currently unavailable.</p>
     </section>
 
     <section class="impact-strip reveal" aria-label="The Green Trekkers achievements">
@@ -66,53 +66,46 @@
             <tr>
               <th>Trek Name</th>
               <th>Date</th>
-              <th>Seats</th>
               <th>Price</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody id="batchTableBody">
-            <tr>
+            <tr class="unavailable-row">
               <td><strong>Rajmachi Fort Trek</strong><span>Night trail + fireflies</span></td>
-              <td>22 June 2026</td>
-              <td>18</td>
-              <td>₹1,299</td>
-              <td><button class="book-btn" data-trek="Rajmachi Fort Trek" data-date="22 June 2026" data-price="₹1,299" data-amount="1299">Book Now</button></td>
+              <td>Coming Soon</td>
+              <td>—</td>
+              <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
-            <tr>
+            <tr class="unavailable-row">
               <td><strong>Kalsubai Peak Trek</strong><span>Highest peak of Maharashtra</span></td>
-              <td>29 June 2026</td>
-              <td>12</td>
-              <td>₹1,599</td>
-              <td><button class="book-btn" data-trek="Kalsubai Peak Trek" data-date="29 June 2026" data-price="₹1,599" data-amount="1599">Book Now</button></td>
+              <td>Coming Soon</td>
+              <td>—</td>
+              <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
-            <tr>
+            <tr class="unavailable-row">
               <td><strong>Devkund Waterfall Trek</strong><span>Forest walk + waterfall</span></td>
-              <td>06 July 2026</td>
-              <td>20</td>
-              <td>₹1,499</td>
-              <td><button class="book-btn" data-trek="Devkund Waterfall Trek" data-date="06 July 2026" data-price="₹1,499" data-amount="1499">Book Now</button></td>
+              <td>Coming Soon</td>
+              <td>—</td>
+              <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
             <tr>
-              <td><strong>Harishchandragad Trek</strong><span>Konkan Kada sunrise</span></td>
-              <td>13 July 2026</td>
-              <td>10</td>
-              <td>₹2,499</td>
-              <td><button class="book-btn" data-trek="Harishchandragad Trek" data-date="13 July 2026" data-price="₹2,499" data-amount="2499">Book Now</button></td>
+              <td><strong>Harishchandragad Trek</strong><span>Konkan Kada sunrise batch</span></td>
+              <td>04 July 2026, 11:00 PM</td>
+              <td>₹1,199</td>
+              <td><button class="book-btn" data-available="true" data-trek="Harishchandragad Trek" data-date="04 July 2026, 11:00 PM" data-price="₹1,199" data-amount="1199">Book Now</button></td>
             </tr>
-            <tr>
+            <tr class="unavailable-row">
               <td><strong>Sandhan Valley Trek</strong><span>Camping + adventure trail</span></td>
-              <td>20 July 2026</td>
-              <td>14</td>
-              <td>₹2,999</td>
-              <td><button class="book-btn" data-trek="Sandhan Valley Trek" data-date="20 July 2026" data-price="₹2,999" data-amount="2999">Book Now</button></td>
+              <td>Coming Soon</td>
+              <td>—</td>
+              <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
-            <tr>
+            <tr class="unavailable-row">
               <td><strong>Andharban Jungle Trek</strong><span>Mist, forest + waterfall trail</span></td>
-              <td>27 July 2026</td>
-              <td>16</td>
-              <td>₹1,799</td>
-              <td><button class="book-btn" data-trek="Andharban Jungle Trek" data-date="27 July 2026" data-price="₹1,799" data-amount="1799">Book Now</button></td>
+              <td>Coming Soon</td>
+              <td>—</td>
+              <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
           </tbody>
         </table>
@@ -120,36 +113,38 @@
     </section>
 
     <section class="mobile-batches reveal" aria-label="Mobile batch cards">
-      <article class="batch-mini-card"><span>Rajmachi Fort Trek</span><b>22 June 2026</b><p>₹1,299 • 18 seats</p><button class="book-btn" data-trek="Rajmachi Fort Trek" data-date="22 June 2026" data-price="₹1,299" data-amount="1299">Book Now</button></article>
-      <article class="batch-mini-card"><span>Kalsubai Peak Trek</span><b>29 June 2026</b><p>₹1,599 • 12 seats</p><button class="book-btn" data-trek="Kalsubai Peak Trek" data-date="29 June 2026" data-price="₹1,599" data-amount="1599">Book Now</button></article>
-      <article class="batch-mini-card"><span>Devkund Waterfall Trek</span><b>06 July 2026</b><p>₹1,499 • 20 seats</p><button class="book-btn" data-trek="Devkund Waterfall Trek" data-date="06 July 2026" data-price="₹1,499" data-amount="1499">Book Now</button></article>
-      <article class="batch-mini-card"><span>Harishchandragad Trek</span><b>13 July 2026</b><p>₹2,499 • 10 seats</p><button class="book-btn" data-trek="Harishchandragad Trek" data-date="13 July 2026" data-price="₹2,499" data-amount="2499">Book Now</button></article>
-      <article class="batch-mini-card"><span>Sandhan Valley Trek</span><b>20 July 2026</b><p>₹2,999 • 14 seats</p><button class="book-btn" data-trek="Sandhan Valley Trek" data-date="20 July 2026" data-price="₹2,999" data-amount="2999">Book Now</button></article>
-      <article class="batch-mini-card"><span>Andharban Jungle Trek</span><b>27 July 2026</b><p>₹1,799 • 16 seats</p><button class="book-btn" data-trek="Andharban Jungle Trek" data-date="27 July 2026" data-price="₹1,799" data-amount="1799">Book Now</button></article>
+      <article class="batch-mini-card unavailable-card"><span>Rajmachi Fort Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
+      <article class="batch-mini-card unavailable-card"><span>Kalsubai Peak Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
+      <article class="batch-mini-card unavailable-card"><span>Devkund Waterfall Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
+      <article class="batch-mini-card"><span>Harishchandragad Trek</span><b>04 July 2026, 11:00 PM</b><p>₹1,199</p><button class="book-btn" data-available="true" data-trek="Harishchandragad Trek" data-date="04 July 2026, 11:00 PM" data-price="₹1,199" data-amount="1199">Book Now</button></article>
+      <article class="batch-mini-card unavailable-card"><span>Sandhan Valley Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
+      <article class="batch-mini-card unavailable-card"><span>Andharban Jungle Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
     </section>
 
     <section class="booking-layout">
       <form id="bookingForm" class="booking-card reveal" novalidate>
-        <span class="pill">Secure your seat</span>
+        <span class="pill">Available Batch</span>
         <h2>Booking Confirmation</h2>
-        <p class="hint">Click “Book Now” from the table or fill the details manually.</p>
+        <p class="hint">Only Harishchandragad Trek is available for booking now. Other treks are currently unavailable.</p>
 
         <div class="form-row">
           <div>
             <label for="selectedTrek">Selected Trek</label>
-            <input type="text" id="selectedTrek" placeholder="Selected trek name" required />
+            <select id="selectedTrek" required>
+              <option value="Harishchandragad Trek" selected>Harishchandragad Trek</option>
+            </select>
           </div>
           <div>
-            <label for="selectedDate">Batch Date</label>
-            <input type="text" id="selectedDate" placeholder="Batch date" required />
+            <label for="selectedDate">Batch Date & Time</label>
+            <input type="text" id="selectedDate" value="04 July 2026, 11:00 PM" readonly required />
           </div>
         </div>
 
         <div class="form-row">
           <div>
             <label for="selectedPrice">Price Per Person</label>
-            <input type="text" id="selectedPrice" placeholder="Price" required />
-            <input type="hidden" id="selectedAmount" value="0" />
+            <input type="text" id="selectedPrice" value="₹1,199" readonly required />
+            <input type="hidden" id="selectedAmount" value="1199" />
           </div>
           <div>
             <label for="members">Members</label>
@@ -172,14 +167,24 @@
           </div>
         </div>
 
-        <label for="pickup">Pickup Point</label>
-        <select id="pickup" required>
-          <option value="">Select pickup point</option>
-          <option>Dadar</option>
-          <option>Thane</option>
-          <option>Panvel</option>
-          <option>Pune Station</option>
-        </select>
+        <div class="form-row">
+          <div>
+            <label for="pickup">Pickup Point</label>
+            <select id="pickup" required>
+              <option value="">Select pickup point</option>
+              <option value="Moshi">Moshi</option>
+              <option value="Chakan">Chakan</option>
+            </select>
+          </div>
+          <div>
+            <label for="dropPoint">Drop Point</label>
+            <select id="dropPoint" required>
+              <option value="">Select drop point</option>
+              <option value="Moshi">Moshi</option>
+              <option value="Chakan">Chakan</option>
+            </select>
+          </div>
+        </div>
 
         <section class="payment-card" aria-label="Payment option">
           <div class="payment-head">
@@ -234,6 +239,8 @@
             <div><dt>Batch Date</dt><dd id="summaryDate">Not selected</dd></div>
             <div><dt>Members</dt><dd id="summaryMembers">1</dd></div>
             <div><dt>Payment Method</dt><dd id="summaryPayment">Not selected</dd></div>
+            <div><dt>Pickup Point</dt><dd id="summaryPickup">Not selected</dd></div>
+            <div><dt>Drop Point</dt><dd id="summaryDropPoint">Not selected</dd></div>
             <div><dt>Total Price</dt><dd id="summaryTotal">₹0</dd></div>
             <div><dt>Screenshot</dt><dd id="summaryScreenshot">Not uploaded</dd></div>
             <div><dt>Payment Status</dt><dd id="summaryPaymentStatus">Pending</dd></div>
@@ -250,7 +257,7 @@
           <div class="side-overlay">
             <span>🌄</span>
             <strong>Next adventure is waiting</strong>
-            <p>Limited seats. Confirm early.</p>
+            <p>Confirm your booking early.</p>
           </div>
         </div>
 
@@ -266,24 +273,24 @@
     <section class="reviews-section reveal" aria-label="Trekker reviews">
       <div class="section-heading compact">
         <p class="eyebrow">Testimonials</p>
-        <h2>Trekkers Love Our Batches</h2>
+        <h2>Trekkers Love Our Harishchandragad Batch</h2>
         <p>Realistic review cards make the website feel trusted and professional.</p>
       </div>
       <div class="reviews-grid">
         <article>
           <div class="stars">★★★★★</div>
-          <p>“Rajmachi night trek was safe, energetic and beautifully managed. The leader guided beginners very well.”</p>
-          <strong>— Aditi, Mumbai</strong>
+          <p>“Harishchandragad night trek was safe, energetic and beautifully managed. The leader guided beginners very well.”</p>
+          <strong>— Aditi, Pune</strong>
         </article>
         <article>
           <div class="stars">★★★★★</div>
-          <p>“Loved the eco-friendly rules and group vibe. Payment and confirmation process was very smooth.”</p>
-          <strong>— Rohan, Pune</strong>
+          <p>“Loved the eco-friendly rules, pickup coordination from Moshi and the smooth payment confirmation process.”</p>
+          <strong>— Rohan, Moshi</strong>
         </article>
         <article>
           <div class="stars">★★★★☆</div>
-          <p>“Kalsubai sunrise was unforgettable. Good support, pickup coordination and amazing memories.”</p>
-          <strong>— Sneha, Thane</strong>
+          <p>“Konkan Kada sunrise was unforgettable. Good support, clear instructions and amazing memories.”</p>
+          <strong>— Sneha, Chakan</strong>
         </article>
       </div>
     </section>
@@ -319,7 +326,7 @@
         </details>
         <details>
           <summary>Is transport included?</summary>
-          <p>Pickup points are available from selected locations like Dadar, Thane, Panvel and Pune Station.</p>
+          <p>Pickup points are available only from Moshi and Chakan.</p>
         </details>
         <details>
           <summary>Can beginners join?</summary>
@@ -339,6 +346,8 @@
         <p>Contact The Green Trekkers for trek details, payment confirmation or batch availability.</p>
       </div>
       <div class="support-cards">
+        <a href="tel:9535917287">📞 9535917287</a>
+        <a href="tel:8668971953">📞 8668971953</a>
         <a href="mailto:thegreentrekkers5@gmail.com">📧 thegreentrekkers5@gmail.com</a>
         <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">💬 WhatsApp Channel</a>
         <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">📸 Instagram</a>
@@ -354,6 +363,8 @@
       <div class="footer-links" aria-label="The Green Trekkers contact links">
         <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
         <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
+        <a href="tel:9535917287">9535917287</a>
+        <a href="tel:8668971953">8668971953</a>
         <a href="mailto:thegreentrekkers5@gmail.com">thegreentrekkers5@gmail.com</a>
       </div>
     </div>
@@ -362,3 +373,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
