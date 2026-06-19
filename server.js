@@ -11,8 +11,6 @@ const path = require('path');
 let nodemailer;
 try { nodemailer = require('nodemailer'); } catch (_) { nodemailer = null; }
 
-let OAuth2Client;
-try { ({ OAuth2Client } = require('google-auth-library')); } catch (_) { OAuth2Client = null; }
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,7 +19,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   console.warn('SECURITY WARNING: Set JWT_SECRET in .env with at least 32 random characters before using this for business.');
@@ -29,15 +26,8 @@ if (!JWT_SECRET || JWT_SECRET.length < 32) {
 if (!ADMIN_EMAIL || !ADMIN_PASSWORD || ADMIN_PASSWORD.length < 10) {
   console.warn('SECURITY WARNING: Set ADMIN_EMAIL and a strong ADMIN_PASSWORD in .env before using this for business.');
 }
-if (!GOOGLE_CLIENT_ID) {
-  console.warn('Google login is not configured yet. Add GOOGLE_CLIENT_ID in .env to activate Google sign-in.');
-}
-if (GOOGLE_CLIENT_ID && !OAuth2Client) {
-  console.warn('Google login package is missing. Run npm install to install google-auth-library.');
-}
 
 const tokenSecret = JWT_SECRET || 'LOCAL_ONLY_CHANGE_THIS_SECRET_BEFORE_DEPLOYMENT_1234567890';
-const googleClient = GOOGLE_CLIENT_ID && OAuth2Client ? new OAuth2Client(GOOGLE_CLIENT_ID) : null;
 
 function parseCouponConfig(value) {
   const fallback = 'HAPPYGREEN10:10,HAPPYGREEN20:20,HAPPYGREEN50:50,HAPPYGREEN100:100';
@@ -69,22 +59,27 @@ function findBatch(db, trek, date) {
   return db.batches.find(batch => batch.trek === cleanTrek && batch.date === cleanDate) || null;
 }
 
+const ALLOWED_TREK = 'Harishchandragad Trek';
+const ALLOWED_DATE = '04 July 2026, 11:00 PM';
+const ALLOWED_PRICE = 1199;
+const ALLOWED_PICKUPS = ['Moshi', 'Chakan'];
+
 const defaultBatches = [
-  { id: 'B-RAJ-01', trek: 'Rajmachi Fort Trek', note: 'Night trail + fireflies', date: '22 June 2026', seats: 18, price: 1299 },
-  { id: 'B-KAL-01', trek: 'Kalsubai Peak Trek', note: 'Highest peak of Maharashtra', date: '29 June 2026', seats: 12, price: 1599 },
-  { id: 'B-DEV-01', trek: 'Devkund Waterfall Trek', note: 'Forest walk + waterfall', date: '06 July 2026', seats: 20, price: 1499 },
-  { id: 'B-HAR-01', trek: 'Harishchandragad Trek', note: 'Konkan Kada sunrise', date: '13 July 2026', seats: 10, price: 2499 },
-  { id: 'B-SAN-01', trek: 'Sandhan Valley Trek', note: 'Camping + adventure trail', date: '20 July 2026', seats: 14, price: 2999 },
-  { id: 'B-AND-01', trek: 'Andharban Jungle Trek', note: 'Mist, forest + waterfall trail', date: '27 July 2026', seats: 16, price: 1799 }
+  { id: 'B-RAJ-01', trek: 'Rajmachi Fort Trek', note: 'Night trail + fireflies', date: 'Coming Soon', price: 1299, available: false },
+  { id: 'B-KAL-01', trek: 'Kalsubai Peak Trek', note: 'Highest peak of Maharashtra', date: 'Coming Soon', price: 1599, available: false },
+  { id: 'B-DEV-01', trek: 'Devkund Waterfall Trek', note: 'Forest walk + waterfall', date: 'Coming Soon', price: 1499, available: false },
+  { id: 'B-HAR-01', trek: ALLOWED_TREK, note: 'Konkan Kada sunrise batch', date: ALLOWED_DATE, price: ALLOWED_PRICE, available: true },
+  { id: 'B-SAN-01', trek: 'Sandhan Valley Trek', note: 'Camping + adventure trail', date: 'Coming Soon', price: 2999, available: false },
+  { id: 'B-AND-01', trek: 'Andharban Jungle Trek', note: 'Mist, forest + waterfall trail', date: 'Coming Soon', price: 1799, available: false }
 ];
 
 const defaultTreks = [
-  { id: 'T-RAJ', name: 'Rajmachi Fort Trek', difficulty: 'Beginner', duration: '1 Day / 1 Night', description: 'Night trail near Lonavala with fireflies and forest route.' },
-  { id: 'T-KAL', name: 'Kalsubai Peak Trek', difficulty: 'Moderate', duration: '1 Day', description: "Maharashtra's highest peak with sunrise views." },
-  { id: 'T-DEV', name: 'Devkund Waterfall Trek', difficulty: 'Beginner', duration: '1 Day', description: 'Jungle trail ending at a waterfall.' },
-  { id: 'T-HAR', name: 'Harishchandragad Trek', difficulty: 'Difficult', duration: '2 Days', description: 'Konkan Kada, caves and sunrise route.' },
-  { id: 'T-SAN', name: 'Sandhan Valley Trek', difficulty: 'Adventure', duration: '2 Days', description: 'Camping, valley route and adventure patches.' },
-  { id: 'T-AND', name: 'Andharban Jungle Trek', difficulty: 'Moderate', duration: '1 Day', description: 'Descending forest trek with mist and waterfalls.' }
+  { id: 'T-RAJ', name: 'Rajmachi Fort Trek', difficulty: 'Beginner', duration: '1 Day / 1 Night', description: 'Night trail near Lonavala with fireflies and forest route.', available: false },
+  { id: 'T-KAL', name: 'Kalsubai Peak Trek', difficulty: 'Moderate', duration: '1 Day', description: "Maharashtra's highest peak with sunrise views.", available: false },
+  { id: 'T-DEV', name: 'Devkund Waterfall Trek', difficulty: 'Beginner', duration: '1 Day', description: 'Jungle trail ending at a waterfall.', available: false },
+  { id: 'T-HAR', name: ALLOWED_TREK, difficulty: 'Difficult', duration: '1 Day / 1 Night', description: 'Konkan Kada, caves and sunrise route. Fixed batch starts on 04 July at 11:00 PM.', available: true },
+  { id: 'T-SAN', name: 'Sandhan Valley Trek', difficulty: 'Adventure', duration: '2 Days', description: 'Camping, valley route and adventure patches.', available: false },
+  { id: 'T-AND', name: 'Andharban Jungle Trek', difficulty: 'Moderate', duration: '1 Day', description: 'Descending forest trek with mist and waterfalls.', available: false }
 ];
 
 function ensureDb() {
@@ -94,8 +89,9 @@ function ensureDb() {
   }
   const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
   if (!Array.isArray(db.users)) db.users = [];
-  if (!Array.isArray(db.treks) || db.treks.length === 0) db.treks = defaultTreks;
-  if (!Array.isArray(db.batches) || db.batches.length === 0) db.batches = defaultBatches;
+  // Keep all treks visible, but only Harishchandragad is available for booking.
+  db.treks = defaultTreks;
+  db.batches = defaultBatches;
   if (!Array.isArray(db.bookings)) db.bookings = [];
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
 }
@@ -151,11 +147,7 @@ function adminPageGuard(req, res, next) {
 app.disable('x-powered-by');
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false,
-  // Google Sign-In opens accounts.google.com in a popup.
-  // Helmet's default COOP is "same-origin", which can make the Google popup stay blank.
-  // Google recommends allowing popups for this flow.
-  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }
+  crossOriginEmbedderPolicy: false
 }));
 
 // Allows local testing from VS Code Live Server / file preview during development.
@@ -194,12 +186,6 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 app.get('/api/health', (req, res) => res.json({ ok: true, name: 'The Green Trekkers Secure API' }));
-app.get('/api/public-config', (req, res) => {
-  res.json({
-    googleClientId: GOOGLE_CLIENT_ID,
-    googleLoginEnabled: Boolean(GOOGLE_CLIENT_ID && OAuth2Client)
-  });
-});
 app.get('/api/me', (req, res) => {
   const auth = getAuth(req);
   res.json({ user: auth ? { id: auth.id, name: auth.name, email: auth.email, role: auth.role } : null });
@@ -238,60 +224,6 @@ app.post('/api/login', loginLimiter, async (req, res) => {
   const publicUser = safeUser(user);
   res.cookie('gt_session', signToken(publicUser), cookieOptions());
   res.json({ user: publicUser });
-});
-
-app.post('/api/auth/google', loginLimiter, async (req, res) => {
-  try {
-    if (!GOOGLE_CLIENT_ID || !googleClient) {
-      return res.status(500).json({ error: 'Google login is not configured. Add GOOGLE_CLIENT_ID in .env, run npm install, and restart the server.' });
-    }
-
-    const credential = String(req.body.credential || '');
-    if (!credential) return res.status(400).json({ error: 'Google credential missing.' });
-
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
-      audience: GOOGLE_CLIENT_ID
-    });
-    const payload = ticket.getPayload() || {};
-    const email = sanitizeString(payload.email, 120).toLowerCase();
-    const name = sanitizeString(payload.name || 'Google User', 80);
-    const googleId = sanitizeString(payload.sub, 120);
-    const emailVerified = payload.email_verified === true || payload.email_verified === 'true';
-
-    if (!googleId || !isEmail(email)) return res.status(401).json({ error: 'Google account details could not be verified.' });
-    if (!emailVerified) return res.status(401).json({ error: 'Please verify your Google email address first.' });
-
-    const db = readDb();
-    let user = db.users.find(u => String(u.email).toLowerCase() === email);
-
-    if (!user) {
-      user = {
-        id: id('U'),
-        name,
-        email,
-        phone: '',
-        googleId,
-        authProvider: 'google',
-        role: 'user',
-        createdAt: new Date().toISOString()
-      };
-      db.users.push(user);
-    } else {
-      user.name = user.name || name;
-      user.googleId = user.googleId || googleId;
-      user.authProvider = user.authProvider || 'google';
-      user.updatedAt = new Date().toISOString();
-    }
-
-    writeDb(db);
-    const publicUser = safeUser(user);
-    res.cookie('gt_session', signToken(publicUser), cookieOptions());
-    res.json({ user: publicUser });
-  } catch (error) {
-    console.error('Google login error:', error);
-    res.status(401).json({ error: 'Google login failed. Check your Google Client ID and authorized origins.' });
-  }
 });
 
 app.post('/api/logout', (req, res) => {
@@ -335,6 +267,9 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   const db = readDb();
   const trek = sanitizeString(req.body.trek, 120);
   const date = sanitizeString(req.body.date, 80);
+  if (trek !== ALLOWED_TREK || date !== ALLOWED_DATE) {
+    return res.status(400).json({ error: 'Only Harishchandragad Trek on 04 July 2026 at 11:00 PM is open for booking.' });
+  }
   const batch = findBatch(db, trek, date);
   const members = Math.max(1, Math.min(Number(req.body.members) || 1, 20));
   const amount = batch ? Math.max(0, Number(batch.price) || 0) : Math.max(0, Number(req.body.amount) || 0);
@@ -361,6 +296,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     email: req.auth.email || '',
     phone: sanitizeString(req.body.phone, 10),
     pickup: sanitizeString(req.body.pickup, 120),
+    dropPoint: sanitizeString(req.body.dropPoint, 120),
     paymentMode: discountResult.total === 0 ? 'Coupon / Free Booking' : paymentModeFromClient,
     paymentStatus: discountResult.total === 0 ? 'Coupon Free Booking' : paymentStatusFromClient,
     paymentScreenshot: sanitizeString(req.body.paymentScreenshot, 160),
@@ -369,6 +305,12 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   };
   if (!booking.trek || !booking.date || !booking.customerName || !isPhone(booking.phone)) {
     return res.status(400).json({ error: 'Missing or invalid booking details' });
+  }
+  if (!ALLOWED_PICKUPS.includes(booking.pickup)) {
+    return res.status(400).json({ error: 'Pickup point must be Moshi or Chakan.' });
+  }
+  if (!ALLOWED_PICKUPS.includes(booking.dropPoint)) {
+    return res.status(400).json({ error: 'Drop point must be Moshi or Chakan.' });
   }
   if (booking.total > 0 && !booking.paymentMode) {
     return res.status(400).json({ error: 'Payment status is required.' });
@@ -435,7 +377,6 @@ app.post('/api/admin/batches', requireAdmin, (req, res) => {
     trek: sanitizeString(req.body.trek, 120),
     note: sanitizeString(req.body.note || 'Admin added batch', 160),
     date: sanitizeString(req.body.date, 80),
-    seats: Math.max(1, Number(req.body.seats) || 1),
     price: Math.max(100, Number(req.body.price) || 100)
   };
   if (!batch.trek || !batch.date) return res.status(400).json({ error: 'Missing batch details' });
@@ -489,3 +430,4 @@ app.listen(PORT, () => {
   console.log(`The Green Trekkers secure server running on http://localhost:${PORT}`);
   console.log('Admin login page: http://localhost:' + PORT + '/admin-login.html');
 });
+
