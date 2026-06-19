@@ -66,25 +66,26 @@
   }
 
   const defaultBatches = [
-    { id: "B-RAJ-01", trek: "Rajmachi Fort Trek", note: "Night trail + fireflies", date: "22 June 2026", seats: 18, price: 1299 },
-    { id: "B-KAL-01", trek: "Kalsubai Peak Trek", note: "Highest peak of Maharashtra", date: "29 June 2026", seats: 12, price: 1599 },
-    { id: "B-DEV-01", trek: "Devkund Waterfall Trek", note: "Forest walk + waterfall", date: "06 July 2026", seats: 20, price: 1499 },
-    { id: "B-HAR-01", trek: "Harishchandragad Trek", note: "Konkan Kada sunrise", date: "13 July 2026", seats: 10, price: 2499 },
-    { id: "B-SAN-01", trek: "Sandhan Valley Trek", note: "Camping + adventure trail", date: "20 July 2026", seats: 14, price: 2999 },
-    { id: "B-AND-01", trek: "Andharban Jungle Trek", note: "Mist, forest + waterfall trail", date: "27 July 2026", seats: 16, price: 1799 }
+    { id: "B-RAJ-01", trek: "Rajmachi Fort Trek", note: "Night trail + fireflies", date: "Coming Soon", price: 1299, available: false },
+    { id: "B-KAL-01", trek: "Kalsubai Peak Trek", note: "Highest peak of Maharashtra", date: "Coming Soon", price: 1599, available: false },
+    { id: "B-DEV-01", trek: "Devkund Waterfall Trek", note: "Forest walk + waterfall", date: "Coming Soon", price: 1499, available: false },
+    { id: "B-HAR-01", trek: "Harishchandragad Trek", note: "Konkan Kada sunrise batch", date: "04 July 2026, 11:00 PM", price: 1199, available: true },
+    { id: "B-SAN-01", trek: "Sandhan Valley Trek", note: "Camping + adventure trail", date: "Coming Soon", price: 2999, available: false },
+    { id: "B-AND-01", trek: "Andharban Jungle Trek", note: "Mist, forest + waterfall trail", date: "Coming Soon", price: 1799, available: false }
   ];
 
   const defaultTreks = [
-    { id: "T-RAJ", name: "Rajmachi Fort Trek", difficulty: "Beginner", duration: "1 Day / 1 Night", description: "Night trail near Lonavala with fireflies and forest route." },
-    { id: "T-KAL", name: "Kalsubai Peak Trek", difficulty: "Moderate", duration: "1 Day", description: "Maharashtra's highest peak with sunrise views." },
-    { id: "T-DEV", name: "Devkund Waterfall Trek", difficulty: "Beginner", duration: "1 Day", description: "Jungle trail ending at a waterfall." },
-    { id: "T-HAR", name: "Harishchandragad Trek", difficulty: "Difficult", duration: "2 Days", description: "Konkan Kada, caves and sunrise route." },
-    { id: "T-SAN", name: "Sandhan Valley Trek", difficulty: "Adventure", duration: "2 Days", description: "Camping, valley route and adventure patches." },
-    { id: "T-AND", name: "Andharban Jungle Trek", difficulty: "Moderate", duration: "1 Day", description: "Descending forest trek with mist and waterfalls." }
+    { id: "T-RAJ", name: "Rajmachi Fort Trek", difficulty: "Beginner", duration: "1 Day / 1 Night", description: "Night trail near Lonavala with fireflies and forest route.", available: false },
+    { id: "T-KAL", name: "Kalsubai Peak Trek", difficulty: "Moderate", duration: "1 Day", description: "Maharashtra's highest peak with sunrise views.", available: false },
+    { id: "T-DEV", name: "Devkund Waterfall Trek", difficulty: "Beginner", duration: "1 Day", description: "Jungle trail ending at a waterfall.", available: false },
+    { id: "T-HAR", name: "Harishchandragad Trek", difficulty: "Difficult", duration: "1 Day / 1 Night", description: "Konkan Kada, caves and sunrise route. Fixed batch starts on 04 July at 11:00 PM.", available: true },
+    { id: "T-SAN", name: "Sandhan Valley Trek", difficulty: "Adventure", duration: "2 Days", description: "Camping, valley route and adventure patches.", available: false },
+    { id: "T-AND", name: "Andharban Jungle Trek", difficulty: "Moderate", duration: "1 Day", description: "Descending forest trek with mist and waterfalls.", available: false }
   ];
 
-  if (!localStorage.getItem("greenTrekkersBatches")) writeJSON("greenTrekkersBatches", defaultBatches);
-  if (!localStorage.getItem("greenTrekkersTreks")) writeJSON("greenTrekkersTreks", defaultTreks);
+  // Keep all trek options visible, but only Harishchandragad is available for booking.
+  writeJSON("greenTrekkersBatches", defaultBatches);
+  writeJSON("greenTrekkersTreks", defaultTreks);
 
   // Theme / dark mode
   const root = document.documentElement;
@@ -249,7 +250,7 @@
   let lastConfirmedBooking = null;
 
   const summaryFields = {
-    bookingId: $("#summaryBookingId"), name: $("#summaryName"), trek: $("#summaryTrek"), date: $("#summaryDate"), members: $("#summaryMembers"), payment: $("#summaryPayment"), coupon: $("#summaryCoupon"), discount: $("#summaryDiscount"), total: $("#summaryTotal"), screenshot: $("#summaryScreenshot"), paymentStatus: $("#summaryPaymentStatus")
+    bookingId: $("#summaryBookingId"), name: $("#summaryName"), trek: $("#summaryTrek"), date: $("#summaryDate"), members: $("#summaryMembers"), payment: $("#summaryPayment"), pickup: $("#summaryPickup"), dropPoint: $("#summaryDropPoint"), coupon: $("#summaryCoupon"), discount: $("#summaryDiscount"), total: $("#summaryTotal"), screenshot: $("#summaryScreenshot"), paymentStatus: $("#summaryPaymentStatus")
   };
 
   function parseAmount(priceText) { return Number(String(priceText || "").replace(/[^0-9]/g, "")) || 0; }
@@ -257,6 +258,7 @@
   function getCustomerName() { const input = $("#customerName"); return input ? input.value.trim() : ""; }
   function getPhone() { const input = $("#phone"); return input ? input.value.trim() : ""; }
   function getPickup() { const input = $("#pickup"); return input ? input.value : ""; }
+  function getDropPoint() { const input = $("#dropPoint"); return input ? input.value : ""; }
   function getPaymentMode() { const input = $("#paymentMode"); return input ? input.value : ""; }
   function getScreenshotFileName() { return paymentScreenshot && paymentScreenshot.files && paymentScreenshot.files.length ? paymentScreenshot.files[0].name : ""; }
   function statusFromMode(mode, screenshot, finalTotal) {
@@ -350,7 +352,7 @@
       const apiBatches = await apiFetch("/api/batches");
       if (Array.isArray(apiBatches) && apiBatches.length) {
         batches = apiBatches;
-        writeJSON("greenTrekkersBatches", apiBatches);
+        writeJSON("greenTrekkersBatches", batches);
       }
     } catch (_) {}
     return batches;
@@ -360,7 +362,13 @@
     $$(".book-btn").forEach(button => {
       if (button.dataset.bound === "true") return;
       button.dataset.bound = "true";
-      button.addEventListener("click", () => fillBooking(button.dataset.trek, button.dataset.date, button.dataset.price, button.dataset.amount));
+      button.addEventListener("click", () => {
+        if (button.disabled || button.dataset.available === "false") {
+          showMessage($("#bookingMessage"), "This trek is currently unavailable. Only Harishchandragad Trek is open for booking.", true);
+          return;
+        }
+        fillBooking(button.dataset.trek, button.dataset.date, button.dataset.price, button.dataset.amount);
+      });
     });
   }
 
@@ -368,12 +376,17 @@
     const tableBody = $("#batchTableBody");
     if (!tableBody) return;
     const dynamic = await getAvailableBatches();
-    const extra = dynamic.filter(b => !defaultBatches.some(d => d.id === b.id));
-    extra.forEach(batch => {
-      if (tableBody.querySelector(`[data-batch-row="${batch.id}"]`)) return;
+    tableBody.innerHTML = "";
+    dynamic.forEach(batch => {
+      const isAvailable = batch.available !== false && batch.trek === "Harishchandragad Trek" && batch.date === "04 July 2026, 11:00 PM";
       const tr = document.createElement("tr");
       tr.dataset.batchRow = batch.id;
-      tr.innerHTML = `<td><strong>${batch.trek}</strong><span>${batch.note || "Admin added batch"}</span></td><td>${batch.date}</td><td>${batch.seats}</td><td>${rupee.format(Number(batch.price))}</td><td><button class="book-btn" data-trek="${batch.trek}" data-date="${batch.date}" data-price="${rupee.format(Number(batch.price))}" data-amount="${Number(batch.price)}">Book Now</button></td>`;
+      tr.className = isAvailable ? "" : "unavailable-row";
+      const dateText = isAvailable ? batch.date : "Coming Soon";
+      const actionHtml = isAvailable
+        ? `<button class="book-btn" data-available="true" data-trek="${batch.trek}" data-date="${dateText}" data-price="${rupee.format(Number(batch.price))}" data-amount="${Number(batch.price)}">Book Now</button>`
+        : `<button class="book-btn unavailable-btn" type="button" data-available="false" disabled>Unavailable</button>`;
+      tr.innerHTML = `<td><strong>${batch.trek}</strong><span>${batch.note || "Trek option"}</span></td><td>${dateText}</td><td>${isAvailable ? rupee.format(Number(batch.price)) : "—"}</td><td>${actionHtml}</td>`;
       tableBody.appendChild(tr);
     });
     bindBookButtons();
@@ -395,22 +408,22 @@
     });
     couponCodeInput.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); applyCoupon(true); } });
   }
-  [selectedTrek, selectedDate, $("#customerName"), $("#phone"), $("#pickup"), $("#paymentMode")].filter(Boolean).forEach(field => { field.addEventListener("input", updateSummary); field.addEventListener("change", updateSummary); });
+  [selectedTrek, selectedDate, $("#customerName"), $("#phone"), $("#pickup"), $("#dropPoint"), $("#paymentMode")].filter(Boolean).forEach(field => { field.addEventListener("input", updateSummary); field.addEventListener("change", updateSummary); });
   if (paymentScreenshot) paymentScreenshot.addEventListener("change", () => { const fileName = getScreenshotFileName(); if (screenshotName) screenshotName.textContent = fileName ? "Uploaded: " + fileName : "Optional for 'Will Pay Later'. Required after UPI payment."; updateSummary(); });
 
   if (currentPage === "batches.html") {
     const params = new URLSearchParams(window.location.search);
     const trekFromUrl = params.get("trek");
     getAvailableBatches().then(batches => {
-      const batch = batches.find(b => b.trek === trekFromUrl);
-      if (trekFromUrl && batch) setTimeout(() => fillBooking(batch.trek, batch.date, rupee.format(Number(batch.price)), batch.price), 250);
+      const batch = batches.find(b => b.trek === "Harishchandragad Trek") || defaultBatches[0];
+      setTimeout(() => fillBooking(batch.trek, batch.date, rupee.format(Number(batch.price)), batch.price), 250);
       updateTotal(); updateSummary();
       if (couponCodeInput && couponCodeInput.value.trim()) setTimeout(() => applyCoupon(false), 450);
     });
   }
 
   function buildWhatsappMessage(booking) {
-    return ["Hello The Green Trekkers, I want to confirm my trek booking.", "", "Booking ID: " + booking.bookingId, "Name: " + booking.customerName, "Phone: " + booking.phone, "Trek: " + booking.trek, "Batch Date: " + booking.date, "Members: " + booking.members, "Price Per Person: " + booking.price, "Total Amount: " + rupee.format(booking.total), "Pickup Point: " + booking.pickup, "Payment Mode: " + booking.paymentMode, "Payment Status: " + booking.paymentStatus, "Payment Screenshot: " + (booking.paymentScreenshot || "Not uploaded")].join("\n");
+    return ["Hello The Green Trekkers, I want to confirm my trek booking.", "", "Booking ID: " + booking.bookingId, "Name: " + booking.customerName, "Phone: " + booking.phone, "Trek: " + booking.trek, "Batch Date: " + booking.date, "Members: " + booking.members, "Price Per Person: " + booking.price, "Total Amount: " + rupee.format(booking.total), "Pickup Point: " + booking.pickup, "Drop Point: " + (booking.dropPoint || "Not selected"), "Payment Mode: " + booking.paymentMode, "Payment Status: " + booking.paymentStatus, "Payment Screenshot: " + (booking.paymentScreenshot || "Not uploaded")].join("\n");
   }
 
   if (bookingForm) bookingForm.addEventListener("submit", async (event) => {
@@ -419,17 +432,18 @@
       const couponOk = await applyCoupon(false);
       if (!couponOk) return showMessage(bookingMessage, "Private discount link is invalid or expired.", true);
     }
-    const trek = selectedTrek.value.trim(), date = selectedDate.value.trim(), price = selectedPrice.value.trim(), customerName = getCustomerName(), phone = getPhone(), pickup = getPickup(), paymentMode = getPaymentMode(), paymentScreenshotName = getScreenshotFileName(), bookingId = bookingIdInput.value || generateBookingId();
+    const trek = selectedTrek.value.trim(), date = selectedDate.value.trim(), price = selectedPrice.value.trim(), customerName = getCustomerName(), phone = getPhone(), pickup = getPickup(), dropPoint = getDropPoint(), paymentMode = getPaymentMode(), paymentScreenshotName = getScreenshotFileName(), bookingId = bookingIdInput.value || generateBookingId();
     const totals = getBookingTotals();
     const members = totals.members, amount = totals.baseAmount, total = totals.finalTotal;
     if (!trek || !date || !price) return showMessage(bookingMessage, "Please select a trek batch first.", true);
     if (customerName.length < 3) return showMessage(bookingMessage, "Please enter your full name.", true);
     if (!/^[0-9]{10}$/.test(phone)) return showMessage(bookingMessage, "Please enter a valid 10 digit phone number.", true);
     if (!pickup) return showMessage(bookingMessage, "Please select a pickup point.", true);
+    if (!["Moshi", "Chakan"].includes(pickup)) return showMessage(bookingMessage, "Pickup point must be Moshi or Chakan.", true);
     if (total > 0 && !paymentMode) return showMessage(bookingMessage, "Please select payment status after checking the QR payment option.", true);
     if (total > 0 && paymentMode === "UPI Payment Done" && !paymentScreenshotName) return showMessage(bookingMessage, "Please upload your payment screenshot after UPI payment.", true);
     let loggedUser = readJSON("greenTrekkersUser", {});
-    const booking = { bookingId, trek, date, price, members, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email: loggedUser.email || "", phone, pickup, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, bookedAt: new Date().toISOString() };
+    const booking = { bookingId, trek, date, price, members, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email: loggedUser.email || "", phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, bookedAt: new Date().toISOString() };
     try {
       const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
       Object.assign(booking, savedBooking);
@@ -438,7 +452,7 @@
       return showMessage(bookingMessage, error.message || "Booking could not be saved. Please login again and try.", true);
     }
     writeJSON("greenTrekkersLastBooking", booking); lastConfirmedBooking = booking;
-    if (confirmationText) confirmationText.innerHTML = `Booking ID: <strong>${bookingId}</strong><br><br>Thank you <strong>${customerName}</strong>! Your booking for <strong>${trek}</strong> on <strong>${date}</strong> is saved.<br><br>Members: <strong>${members}</strong><br>Price Per Person: <strong>${price}</strong><br>Subtotal: <strong>${rupee.format(totals.subtotal)}</strong><br>Discount: <strong>${rupee.format(booking.discountAmount || 0)}</strong><br>Total Amount: <strong>${rupee.format(Number(booking.total || total))}</strong><br>Pickup Point: <strong>${pickup}</strong><br>Payment Mode: <strong>${booking.paymentMode}</strong><br>Payment Status: <strong>${booking.paymentStatus}</strong><br>Payment Screenshot: <strong>${paymentScreenshotName || "Not uploaded"}</strong><br>Contact: <strong>${phone}</strong>`;
+    if (confirmationText) confirmationText.innerHTML = `Booking ID: <strong>${bookingId}</strong><br><br>Thank you <strong>${customerName}</strong>! Your booking for <strong>${trek}</strong> on <strong>${date}</strong> is saved.<br><br>Members: <strong>${members}</strong><br>Price Per Person: <strong>${price}</strong><br>Subtotal: <strong>${rupee.format(totals.subtotal)}</strong><br>Discount: <strong>${rupee.format(booking.discountAmount || 0)}</strong><br>Total Amount: <strong>${rupee.format(Number(booking.total || total))}</strong><br>Pickup Point: <strong>${pickup}</strong><br>Drop Point: <strong>${dropPoint}</strong><br>Payment Mode: <strong>${booking.paymentMode}</strong><br>Payment Status: <strong>${booking.paymentStatus}</strong><br>Payment Screenshot: <strong>${paymentScreenshotName || "Not uploaded"}</strong><br>Contact: <strong>${phone}</strong>`;
     if (whatsappBtn) {
       whatsappBtn.href = whatsappNumber
         ? "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(buildWhatsappMessage(booking))
@@ -461,7 +475,7 @@
   function pdfEscape(text) { return String(text ?? "").replace(/[\\()]/g, "\\$&").replace(/₹/g, "Rs."); }
   function downloadReceiptPdf(booking) {
     if (!booking) return alert("Please confirm a booking first.");
-    const lines = ["The Green Trekkers - Trek Ticket / Receipt", "", "Booking ID: " + booking.bookingId, "Name: " + booking.customerName, "Phone: " + booking.phone, "Trek: " + booking.trek, "Date: " + booking.date, "Members: " + booking.members, "Subtotal: Rs. " + (booking.subtotal || booking.total), "Discount: Rs. " + (booking.discountAmount || 0), "Total Amount: Rs. " + booking.total, "Pickup Point: " + booking.pickup, "Payment Mode: " + booking.paymentMode, "Payment Status: " + booking.paymentStatus, "", "Support: " + businessEmail, "WhatsApp Channel: " + whatsappChannelLink, "Instagram: " + instagramLink, "Note: Carry trekking shoes, water bottle, torch and personal medicines."];
+    const lines = ["The Green Trekkers - Trek Ticket / Receipt", "", "Booking ID: " + booking.bookingId, "Name: " + booking.customerName, "Phone: " + booking.phone, "Trek: " + booking.trek, "Date: " + booking.date, "Members: " + booking.members, "Subtotal: Rs. " + (booking.subtotal || booking.total), "Discount: Rs. " + (booking.discountAmount || 0), "Total Amount: Rs. " + booking.total, "Pickup Point: " + booking.pickup, "Drop Point: " + (booking.dropPoint || "Not selected"), "Payment Mode: " + booking.paymentMode, "Payment Status: " + booking.paymentStatus, "", "Support: " + businessEmail, "WhatsApp Channel: " + whatsappChannelLink, "Instagram: " + instagramLink, "Note: Carry trekking shoes, water bottle, torch and personal medicines."];
     let textOps = "BT /F1 18 Tf 50 780 Td (" + pdfEscape(lines[0]) + ") Tj ET\n";
     textOps += "BT /F1 12 Tf 50 746 Td 18 TL";
     lines.slice(1).forEach(line => { textOps += " T* (" + pdfEscape(line) + ") Tj"; });
@@ -551,10 +565,10 @@
 
     const body = $("#adminBookingBody");
     if (body) {
-      body.innerHTML = bookings.length ? "" : `<tr><td colspan="8">No bookings yet.</td></tr>`;
+      body.innerHTML = bookings.length ? "" : `<tr><td colspan="10">No bookings yet.</td></tr>`;
       bookings.forEach(booking => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><strong>${booking.bookingId}</strong></td><td>${booking.customerName || "-"}</td><td>${booking.trek || "-"}</td><td>${booking.date || "-"}</td><td>${rupee.format(Number(booking.total || 0))}</td><td>${booking.couponCode || "-"}</td><td><span class="payment-status-pill ${statusClass(booking.paymentStatus)}">${booking.paymentStatus || "Pending"}</span></td><td><select data-booking-status="${booking.bookingId}"><option>Payment Pending</option><option>Payment Under Review</option><option>Payment Confirmed</option><option>Payment Rejected</option><option>Coupon Free Booking</option></select><button class="secondary-btn" data-update-status="${booking.bookingId}">Update</button></td>`;
+        tr.innerHTML = `<td><strong>${booking.bookingId}</strong></td><td>${booking.customerName || "-"}</td><td>${booking.trek || "-"}</td><td>${booking.date || "-"}</td><td>${booking.pickup || "-"}</td><td>${booking.dropPoint || "-"}</td><td>${rupee.format(Number(booking.total || 0))}</td><td>${booking.couponCode || "-"}</td><td><span class="payment-status-pill ${statusClass(booking.paymentStatus)}">${booking.paymentStatus || "Pending"}</span></td><td><select data-booking-status="${booking.bookingId}"><option>Payment Pending</option><option>Payment Under Review</option><option>Payment Confirmed</option><option>Payment Rejected</option><option>Coupon Free Booking</option></select><button class="secondary-btn" data-update-status="${booking.bookingId}">Update</button></td>`;
         body.appendChild(tr);
         const select = $(`[data-booking-status="${booking.bookingId}"]`, tr);
         if (select) select.value = booking.paymentStatus || "Payment Pending";
@@ -573,7 +587,7 @@
     const trekList = $("#adminTreksList");
     if (trekList) trekList.innerHTML = treks.map(t => `<div class="admin-list-item"><strong>${t.name}</strong><span>${t.difficulty} • ${t.duration}</span><p>${t.description || ""}</p></div>`).join("");
     const batchList = $("#adminBatchesList");
-    if (batchList) batchList.innerHTML = batches.map(b => `<div class="admin-list-item"><strong>${b.trek}</strong><span>${b.date} • ${b.seats} seats • ${rupee.format(Number(b.price))}</span></div>`).join("");
+    if (batchList) batchList.innerHTML = batches.map(b => `<div class="admin-list-item"><strong>${b.trek}</strong><span>${b.date} • ${rupee.format(Number(b.price))}</span></div>`).join("");
   }
 
   function statusClass(status) {
@@ -612,10 +626,9 @@
       trek: $("#adminBatchTrek").value.trim(),
       note: "Admin added batch",
       date: $("#adminBatchDate").value.trim(),
-      seats: Number($("#adminBatchSeats").value),
       price: Number($("#adminBatchPrice").value)
     };
-    if (!batch.trek || !batch.date || !batch.seats || !batch.price) return showMessage($("#adminBatchMessage"), "Please fill all batch details.", true);
+    if (!batch.trek || !batch.date || !batch.price) return showMessage($("#adminBatchMessage"), "Please fill all batch details.", true);
     try {
       await apiFetch("/api/admin/batches", { method: "POST", body: JSON.stringify(batch) });
       adminBatchForm.reset();
@@ -628,8 +641,8 @@
   if (exportBookingsBtn) exportBookingsBtn.addEventListener("click", () => {
     const rows = lastAdminBookings;
     if (!rows.length) return alert("No bookings to export.");
-    const header = ["Booking ID", "Name", "Phone", "Email", "Trek", "Date", "Members", "Total", "Payment Status"];
-    const csv = [header.join(",")].concat(rows.map(b => [b.bookingId, b.customerName, b.phone, b.email, b.trek, b.date, b.members, b.total, b.paymentStatus].map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(","))).join("\n");
+    const header = ["Booking ID", "Name", "Phone", "Email", "Trek", "Date", "Members", "Pickup", "Drop Point", "Total", "Payment Status"];
+    const csv = [header.join(",")].concat(rows.map(b => [b.bookingId, b.customerName, b.phone, b.email, b.trek, b.date, b.members, b.pickup, b.dropPoint, b.total, b.paymentStatus].map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(","))).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -639,3 +652,4 @@
     a.remove();
   });
 })();
+
