@@ -2014,4 +2014,7 @@ html[data-theme="dark"] .unavailable-btn,
 html[data-theme="dark"] .unavailable-btn:hover,
 html[data-theme="dark"] .book-btn:disabled { background: rgba(148, 163, 184, .28) !important; color: #e5e7eb !important; }
 
+.vertical-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+.vertical-actions .primary-btn, .vertical-actions .secondary-btn { justify-content: center; text-align: center; text-decoration: none; }
+
 
