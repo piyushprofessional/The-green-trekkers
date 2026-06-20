@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="The Green Trekkers - customer login and signup for Sahyadri trekking bookings." />
-  <title>The Green Trekkers | Login</title>
+  <meta name="description" content="The Green Trekkers - Sahyadri trekking website with public booking and protected admin panel." />
+  <title>The Green Trekkers | Home</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="login-page">
@@ -18,7 +18,7 @@
         <p class="eyebrow gold-text">Sahyadri Range</p>
         <h1>The Green Trekkers</h1>
         <p class="tagline">Trek. Explore. Preserve.</p>
-        <p class="brand-copy">Create an account, book upcoming batches, scan UPI QR, download your ticket and track your payment status.</p>
+        <p class="brand-copy">Book the Harishchandragad Trek directly. No customer login required. Admin login is protected separately for the business owner.</p>
         <div class="auth-contact-links" aria-label="Official The Green Trekkers links">
           <a href="https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X" target="_blank" rel="noopener">WhatsApp Channel</a>
           <a href="https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn" target="_blank" rel="noopener">Instagram</a>
@@ -32,49 +32,18 @@
       </div>
 
       <div class="form-card auth-form-wrap">
-        <div class="auth-tabs" role="tablist" aria-label="Login and signup options">
-          <button type="button" class="auth-tab active" data-auth-tab="login">Login</button>
-          <button type="button" class="auth-tab" data-auth-tab="signup">Signup</button>
+        <span class="pill">Public Booking</span>
+        <h2>Book Harishchandragad Trek</h2>
+        <p class="hint">Available batch: <strong>04 July 2026, 11:00 PM</strong><br>Price: <strong>₹1,199 per person</strong><br>Pickup/Drop: <strong>Moshi or Chakan</strong></p>
+
+        <div class="auth-contact-links vertical-actions" aria-label="Website actions">
+          <a class="primary-btn full-btn" href="batches.html">Book Now</a>
+          <a class="secondary-btn full-btn" href="treks.html">View Treks</a>
+          <a class="secondary-btn full-btn" href="admin-login.html">Admin Login</a>
         </div>
 
-        <form id="loginForm" class="auth-panel active" data-auth-panel="login" novalidate>
-          <span class="pill">Customer Login</span>
-          <h2>Welcome back</h2>
-          <p class="hint">Login with your email and password to book treks.</p>
-
-          <label for="loginEmail">Email</label>
-          <input id="loginEmail" type="email" autocomplete="email" placeholder="your@email.com" required />
-
-          <label for="loginPassword">Password</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Minimum 8 characters" required />
-
-          <button class="primary-btn full-btn" type="submit">Login & View Treks</button>
-          <p id="loginMessage" class="message" role="status"></p>
-        </form>
-
-        <form id="signupForm" class="auth-panel" data-auth-panel="signup" novalidate>
-          <span class="pill">Create Account</span>
-          <h2>Start your trekking journey</h2>
-          <p class="hint">Create an account to book batches and download tickets.</p>
-
-          <label for="signupName">Full Name</label>
-          <input id="signupName" type="text" autocomplete="name" placeholder="Your full name" required />
-
-          <label for="signupEmail">Email</label>
-          <input id="signupEmail" type="email" autocomplete="email" placeholder="your@email.com" required />
-
-          <label for="signupPhone">Phone Number</label>
-          <input id="signupPhone" type="tel" maxlength="10" autocomplete="tel" placeholder="10 digit mobile number" required />
-
-          <label for="signupPassword">Password</label>
-          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 8 characters" required />
-
-          <button class="primary-btn full-btn" type="submit">Create Account & View Treks</button>
-          <p id="signupMessage" class="message" role="status"></p>
-        </form>
-
         <div class="demo-note">
-          <strong>Business owner?</strong> <a href="admin-login.html">Open protected admin login</a>
+          <strong>Need help?</strong> Call <a href="tel:9535917287">9535917287</a> or <a href="tel:8668971953">8668971953</a>
         </div>
       </div>
     </section>
