@@ -1,7 +1,7 @@
 {
   "name": "green-trekkers-client-ready-email-login",
   "version": "3.1.0",
-  "description": "Client-ready trekking booking website for The Green Trekkers with email login, admin dashboard, private coupons and secure Node.js backend.",
+  "description": "Client-ready trekking booking website for The Green Trekkers with public booking, protected admin dashboard, private coupons and secure Node.js backend.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
