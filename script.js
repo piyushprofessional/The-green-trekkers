@@ -9,7 +9,7 @@
   const instagramLink = "https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn";
   const businessEmail = "thegreentrekkers5@gmail.com";
   const currentPage = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
-  const protectedPages = ["treks.html", "batches.html", "gallery.html", "locations.html", "policy.html"];
+  const protectedPages = []; // Public customer pages: no login/signup required
   const API_BASE = (() => {
     const host = window.location.hostname;
     const port = window.location.port;
@@ -109,22 +109,7 @@
   });
 
   const storedUser = localStorage.getItem("greenTrekkersUser");
-  if (protectedPages.includes(currentPage) && !storedUser) {
-    window.location.href = "index.html";
-    return;
-  }
-
-  const userBadge = $("#userBadge");
-  if (userBadge && storedUser) {
-    try { const user = JSON.parse(storedUser); userBadge.textContent = "Hi, " + ((user.name || user.username || "Trekker").split(" ")[0]); }
-    catch { userBadge.textContent = "Hi, Trekker"; }
-  }
-  const logoutBtn = $("#logoutBtn");
-  if (logoutBtn) logoutBtn.addEventListener("click", async () => {
-    try { await apiFetch("/api/logout", { method: "POST" }); } catch (_) {}
-    localStorage.removeItem("greenTrekkersUser");
-    window.location.href = "index.html";
-  });
+  // Customer pages are public now. Only admin.html remains protected by backend admin login.
 
   const navToggle = $("#navToggle"), siteNav = $("#siteNav");
   if (navToggle && siteNav) {
@@ -440,16 +425,17 @@
     if (!/^[0-9]{10}$/.test(phone)) return showMessage(bookingMessage, "Please enter a valid 10 digit phone number.", true);
     if (!pickup) return showMessage(bookingMessage, "Please select a pickup point.", true);
     if (!["Moshi", "Chakan"].includes(pickup)) return showMessage(bookingMessage, "Pickup point must be Moshi or Chakan.", true);
+    if (!dropPoint) return showMessage(bookingMessage, "Please select a drop point.", true);
+    if (!["Moshi", "Chakan"].includes(dropPoint)) return showMessage(bookingMessage, "Drop point must be Moshi or Chakan.", true);
     if (total > 0 && !paymentMode) return showMessage(bookingMessage, "Please select payment status after checking the QR payment option.", true);
     if (total > 0 && paymentMode === "UPI Payment Done" && !paymentScreenshotName) return showMessage(bookingMessage, "Please upload your payment screenshot after UPI payment.", true);
-    let loggedUser = readJSON("greenTrekkersUser", {});
-    const booking = { bookingId, trek, date, price, members, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email: loggedUser.email || "", phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, bookedAt: new Date().toISOString() };
+    const booking = { bookingId, trek, date, price, members, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email: "", phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, bookedAt: new Date().toISOString() };
     try {
       const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
       Object.assign(booking, savedBooking);
       await apiFetch("/api/send-confirmation", { method: "POST", body: JSON.stringify({ booking }) });
     } catch (error) {
-      return showMessage(bookingMessage, error.message || "Booking could not be saved. Please login again and try.", true);
+      return showMessage(bookingMessage, error.message || "Booking could not be saved. Please try again.", true);
     }
     writeJSON("greenTrekkersLastBooking", booking); lastConfirmedBooking = booking;
     if (confirmationText) confirmationText.innerHTML = `Booking ID: <strong>${bookingId}</strong><br><br>Thank you <strong>${customerName}</strong>! Your booking for <strong>${trek}</strong> on <strong>${date}</strong> is saved.<br><br>Members: <strong>${members}</strong><br>Price Per Person: <strong>${price}</strong><br>Subtotal: <strong>${rupee.format(totals.subtotal)}</strong><br>Discount: <strong>${rupee.format(booking.discountAmount || 0)}</strong><br>Total Amount: <strong>${rupee.format(Number(booking.total || total))}</strong><br>Pickup Point: <strong>${pickup}</strong><br>Drop Point: <strong>${dropPoint}</strong><br>Payment Mode: <strong>${booking.paymentMode}</strong><br>Payment Status: <strong>${booking.paymentStatus}</strong><br>Payment Screenshot: <strong>${paymentScreenshotName || "Not uploaded"}</strong><br>Contact: <strong>${phone}</strong>`;
