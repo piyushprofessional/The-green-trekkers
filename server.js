@@ -256,14 +256,14 @@ app.get('/api/admin/me', (req, res) => {
 app.get('/api/treks', (req, res) => res.json(readDb().treks));
 app.get('/api/batches', (req, res) => res.json(readDb().batches));
 
-app.post('/api/coupons/validate', requireAuth, (req, res) => {
+app.post('/api/coupons/validate', (req, res) => {
   const subtotal = Math.max(0, Number(req.body.subtotal) || 0);
   const result = calculateDiscount(req.body.couponCode, subtotal);
   if (!result) return res.status(400).json({ error: 'Invalid coupon code.' });
   res.json(result);
 });
 
-app.post('/api/bookings', requireAuth, (req, res) => {
+app.post('/api/bookings', (req, res) => {
   const db = readDb();
   const trek = sanitizeString(req.body.trek, 120);
   const date = sanitizeString(req.body.date, 80);
@@ -293,7 +293,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     discountAmount: discountResult.discountAmount,
     total: discountResult.total,
     customerName: sanitizeString(req.body.customerName, 80),
-    email: req.auth.email || '',
+    email: sanitizeString(req.body.email || '', 120),
     phone: sanitizeString(req.body.phone, 10),
     pickup: sanitizeString(req.body.pickup, 120),
     dropPoint: sanitizeString(req.body.dropPoint, 120),
@@ -301,7 +301,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     paymentStatus: discountResult.total === 0 ? 'Coupon Free Booking' : paymentStatusFromClient,
     paymentScreenshot: sanitizeString(req.body.paymentScreenshot, 160),
     bookedAt: new Date().toISOString(),
-    userId: req.auth.id
+    userId: 'public-guest'
   };
   if (!booking.trek || !booking.date || !booking.customerName || !isPhone(booking.phone)) {
     return res.status(400).json({ error: 'Missing or invalid booking details' });
@@ -320,7 +320,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   res.status(201).json(booking);
 });
 
-app.post('/api/send-confirmation', requireAuth, async (req, res) => {
+app.post('/api/send-confirmation', async (req, res) => {
   const booking = req.body.booking;
   if (!booking) return res.status(400).json({ error: 'Booking required' });
   const subject = `The Green Trekkers Booking ${sanitizeString(booking.bookingId, 40)}`;
@@ -333,7 +333,7 @@ app.post('/api/send-confirmation', requireAuth, async (req, res) => {
       secure: process.env.SMTP_SECURE === 'true',
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
     });
-    await transporter.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to: req.auth.email, subject, text });
+    if (booking.email) await transporter.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to: booking.email, subject, text });
     return res.json({ sent: true });
   }
   console.log('\n--- EMAIL CONFIRMATION DEMO ---');
