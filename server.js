@@ -222,19 +222,37 @@ app.post('/api/bookings', (req, res) => {
 });
 
 app.post('/api/send-confirmation', async (req, res) => {
-  const booking = req.body.booking;
-  if (!booking) return res.status(400).json({ error: 'Booking required' });
-  const subject = `The Green Trekkers Booking ${sanitizeString(booking.bookingId, 40)}`;
-  const memberText = Array.isArray(booking.memberDetails) ? booking.memberDetails.map((m, i) => `${i + 1}. ${sanitizeString(m.name, 80)} (${Number(m.age) || 0} yrs)`).join('\n') : '';
-  const text = `Hello ${sanitizeString(booking.customerName, 80)},\n\nYour trek booking has been received.\n\nBooking ID: ${sanitizeString(booking.bookingId, 40)}\nTrek: ${sanitizeString(booking.trek, 120)}\nDate: ${sanitizeString(booking.date, 80)}\nMembers: ${Number(booking.members) || 1}\n${memberText}\nPickup: ${sanitizeString(booking.pickup, 80)}\nDrop: ${sanitizeString(booking.dropPoint, 80)}\nSubtotal: Rs. ${Number(booking.subtotal || 0)}\nCoupon: ${sanitizeString(booking.couponCode || 'Not applied', 40)}\nDiscount: Rs. ${Number(booking.discountAmount || 0)}\nTotal: Rs. ${Number(booking.total || 0)}\nPayment Status: ${sanitizeString(booking.paymentStatus, 80)}\n\nTerms and trek consent: Accepted\n\nSupport: 9535917287 / 8668971953\nEmail: thegreentrekkers5@gmail.com\nFeedback: mailto:thegreentrekkers5@gmail.com?subject=The%20Green%20Trekkers%20Feedback\nWhatsApp Channel: https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X\nInstagram: https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn`;
+  try {
+    const booking = req.body.booking;
+    if (!booking) return res.status(400).json({ error: 'Booking required' });
 
-  if (nodemailer && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && booking.email) {
-    const transporter = nodemailer.createTransport({ host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 587), secure: process.env.SMTP_SECURE === 'true', auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } });
-    await transporter.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to: booking.email, subject, text });
-    return res.json({ sent: true });
+    const subject = `The Green Trekkers Booking ${sanitizeString(booking.bookingId, 40)}`;
+    const memberText = Array.isArray(booking.memberDetails) ? booking.memberDetails.map((m, i) => `${i + 1}. ${sanitizeString(m.name, 80)} (${Number(m.age) || 0} yrs)`).join('\n') : '';
+    const text = `Hello ${sanitizeString(booking.customerName, 80)},\n\nYour trek booking has been received.\n\nBooking ID: ${sanitizeString(booking.bookingId, 40)}\nTrek: ${sanitizeString(booking.trek, 120)}\nDate: ${sanitizeString(booking.date, 80)}\nMembers: ${Number(booking.members) || 1}\n${memberText}\nPickup: ${sanitizeString(booking.pickup, 80)}\nDrop: ${sanitizeString(booking.dropPoint, 80)}\nSubtotal: Rs. ${Number(booking.subtotal || 0)}\nCoupon: ${sanitizeString(booking.couponCode || 'Not applied', 40)}\nDiscount: Rs. ${Number(booking.discountAmount || 0)}\nTotal: Rs. ${Number(booking.total || 0)}\nPayment Status: ${sanitizeString(booking.paymentStatus, 80)}\n\nTerms and trek consent: Accepted\n\nSupport: 9535917287 / 8668971953\nEmail: thegreentrekkers5@gmail.com\nFeedback: mailto:thegreentrekkers5@gmail.com?subject=The%20Green%20Trekkers%20Feedback\nWhatsApp Channel: https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X\nInstagram: https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn`;
+
+    if (nodemailer && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && booking.email) {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT || 587),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+      });
+      await transporter.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to: booking.email, subject, text });
+      return res.json({ sent: true });
+    }
+
+    console.log('\n--- EMAIL CONFIRMATION DEMO ---');
+    console.log(subject);
+    console.log(text);
+    console.log('Set SMTP_HOST, SMTP_USER, SMTP_PASS to send real email.');
+    return res.json({ sent: false, demo: true, message: 'Email printed in server console because SMTP is not configured.' });
+  } catch (error) {
+    console.error('Email confirmation failed:', error.message || error);
+    return res.json({
+      sent: false,
+      warning: 'Booking is saved, but confirmation email could not be sent. Check SMTP_USER and SMTP_PASS/App Password.'
+    });
   }
-  console.log('\n--- EMAIL CONFIRMATION DEMO ---'); console.log(subject); console.log(text); console.log('Set SMTP_HOST, SMTP_USER, SMTP_PASS to send real email.');
-  res.json({ sent: false, demo: true, message: 'Email printed in server console because SMTP is not configured.' });
 });
 
 app.get('/api/gallery/approved', (req, res) => {
