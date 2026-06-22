@@ -2017,4 +2017,135 @@ html[data-theme="dark"] .book-btn:disabled { background: rgba(148, 163, 184, .28
 .vertical-actions { flex-direction: column; align-items: stretch; gap: 12px; }
 .vertical-actions .primary-btn, .vertical-actions .secondary-btn { justify-content: center; text-align: center; text-decoration: none; }
 
+/* Final client-change additions */
+.readonly-info {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(18, 59, 31, 0.16);
+  background: rgba(238, 248, 232, 0.75);
+  font-weight: 900;
+  color: var(--forest-2);
+}
+.member-details-card,
+.trek-info-card,
+.terms-card,
+.feedback-box {
+  border: 1px solid rgba(47, 125, 50, 0.18);
+  border-radius: 22px;
+  padding: 20px;
+  background: rgba(238, 248, 232, 0.72);
+  box-shadow: 0 12px 30px rgba(8, 36, 20, 0.08);
+  margin: 18px 0;
+}
+.member-details-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+.member-detail-row {
+  display: grid;
+  grid-template-columns: 1.5fr .7fr;
+  gap: 14px;
+}
+.inclusion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+.inclusion-grid article {
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(18,59,31,.12);
+  border-radius: 16px;
+  padding: 16px;
+}
+.inclusion-grid h4 { color: var(--forest-2); margin-bottom: 8px; }
+.inclusion-grid ul,
+.terms-card ul {
+  padding-left: 20px;
+  color: var(--muted);
+}
+.checkbox-line {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin-top: 14px;
+  font-weight: 800;
+  color: var(--forest-2);
+}
+.checkbox-line input {
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  accent-color: var(--green);
+}
+.ticket-preview {
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(47,125,50,.22);
+  border-radius: 18px;
+  padding: 16px;
+  color: var(--text);
+}
+.ticket-preview h3 { color: var(--forest-2); margin-bottom: 10px; }
+.small-note { font-size: .92rem; color: var(--muted); }
+.feedback-box { text-align: center; }
+.gallery-submit-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+.gallery-submit-form .form-row { margin: 0; }
+.approved-gallery-title { margin-top: 34px; }
+.gallery-approval-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  align-items: center;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(18,59,31,.12);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.gallery-approval-card img {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.gallery-approval-card button { margin-right: 8px; margin-top: 8px; }
+.user-photo-card img { height: 250px; width: 100%; object-fit: cover; border-radius: 18px; }
+[data-theme="dark"] .readonly-info,
+[data-theme="dark"] .member-details-card,
+[data-theme="dark"] .trek-info-card,
+[data-theme="dark"] .terms-card,
+[data-theme="dark"] .feedback-box {
+  background: rgba(8,36,20,.72);
+  border-color: rgba(156,204,101,.20);
+  color: #ecf8e8;
+}
+[data-theme="dark"] .inclusion-grid article,
+[data-theme="dark"] .ticket-preview,
+[data-theme="dark"] .gallery-approval-card {
+  background: rgba(5,24,12,.82);
+  border-color: rgba(156,204,101,.18);
+  color: #ecf8e8;
+}
+[data-theme="dark"] .inclusion-grid h4,
+[data-theme="dark"] .checkbox-line,
+[data-theme="dark"] .ticket-preview h3 { color: #b7f7bb; }
+[data-theme="dark"] .inclusion-grid ul,
+[data-theme="dark"] .terms-card ul,
+[data-theme="dark"] .small-note { color: rgba(236,248,232,.78); }
+@media (max-width: 720px) {
+  .member-detail-row,
+  .inclusion-grid,
+  .gallery-approval-card { grid-template-columns: 1fr; }
+  .gallery-approval-card img { width: 100%; height: 180px; }
+}
+
 
