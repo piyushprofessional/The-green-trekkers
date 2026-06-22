@@ -1,7 +1,8 @@
 // The Green Trekkers - public booking + admin dashboard + coupons + gallery approvals
 (function () {
   "use strict";
-
+ const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
   const rupee = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
   const whatsappNumber = "";
   const whatsappChannelLink = "https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X";
