@@ -119,25 +119,6 @@
       <p>Harishchandragad booking is open for 04 July at 11:00 PM. Other trek options are visible but currently unavailable.</p>
     </section>
 
-    <section class="impact-strip reveal" aria-label="The Green Trekkers achievements">
-      <article>
-        <strong><span class="counter" data-target="500">0</span>+</strong>
-        <p>Happy Trekkers</p>
-      </article>
-      <article>
-        <strong><span class="counter" data-target="25">0</span>+</strong>
-        <p>Treks Completed</p>
-      </article>
-      <article>
-        <strong><span class="counter" data-target="15">0</span>+</strong>
-        <p>Expert Leaders</p>
-      </article>
-      <article>
-        <strong><span class="counter" data-target="48" data-decimal="true">0</span>/5</strong>
-        <p>Average Rating</p>
-      </article>
-    </section>
-
     <section class="batch-wrapper reveal" aria-label="Upcoming trek batches">
       <div class="table-scroll">
         <table class="batch-table">
@@ -146,6 +127,7 @@
               <th>Trek Name</th>
               <th>Date</th>
               <th>Price</th>
+              <th>Available Seats</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -154,36 +136,42 @@
               <td><strong>Rajmachi Fort Trek</strong><span>Night trail + fireflies</span></td>
               <td>Coming Soon</td>
               <td>—</td>
+              <td>Unavailable</td>
               <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
             <tr class="unavailable-row">
               <td><strong>Kalsubai Peak Trek</strong><span>Highest peak of Maharashtra</span></td>
               <td>Coming Soon</td>
               <td>—</td>
+              <td>Unavailable</td>
               <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
             <tr class="unavailable-row">
               <td><strong>Devkund Waterfall Trek</strong><span>Forest walk + waterfall</span></td>
               <td>Coming Soon</td>
               <td>—</td>
+              <td>Unavailable</td>
               <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
             <tr>
               <td><strong>Harishchandragad Trek</strong><span>Konkan Kada sunrise batch</span></td>
               <td>04 July 2026, 11:00 PM</td>
               <td>₹1,199</td>
+              <td>30 available</td>
               <td><button class="book-btn" data-available="true" data-trek="Harishchandragad Trek" data-date="04 July 2026, 11:00 PM" data-price="₹1,199" data-amount="1199">Book Now</button></td>
             </tr>
             <tr class="unavailable-row">
               <td><strong>Sandhan Valley Trek</strong><span>Camping + adventure trail</span></td>
               <td>Coming Soon</td>
               <td>—</td>
+              <td>Unavailable</td>
               <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
             <tr class="unavailable-row">
               <td><strong>Andharban Jungle Trek</strong><span>Mist, forest + waterfall trail</span></td>
               <td>Coming Soon</td>
               <td>—</td>
+              <td>Unavailable</td>
               <td><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></td>
             </tr>
           </tbody>
@@ -195,7 +183,7 @@
       <article class="batch-mini-card unavailable-card"><span>Rajmachi Fort Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
       <article class="batch-mini-card unavailable-card"><span>Kalsubai Peak Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
       <article class="batch-mini-card unavailable-card"><span>Devkund Waterfall Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
-      <article class="batch-mini-card"><span>Harishchandragad Trek</span><b>04 July 2026, 11:00 PM</b><p>₹1,199</p><button class="book-btn" data-available="true" data-trek="Harishchandragad Trek" data-date="04 July 2026, 11:00 PM" data-price="₹1,199" data-amount="1199">Book Now</button></article>
+      <article class="batch-mini-card"><span>Harishchandragad Trek</span><b>04 July 2026, 11:00 PM</b><p>₹1,199 • 30 seats available</p><button class="book-btn" data-available="true" data-trek="Harishchandragad Trek" data-date="04 July 2026, 11:00 PM" data-price="₹1,199" data-amount="1199">Book Now</button></article>
       <article class="batch-mini-card unavailable-card"><span>Sandhan Valley Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
       <article class="batch-mini-card unavailable-card"><span>Andharban Jungle Trek</span><b>Coming Soon</b><p>Unavailable</p><button class="book-btn unavailable-btn" type="button" disabled>Unavailable</button></article>
     </section>
@@ -231,6 +219,15 @@
           </div>
         </div>
 
+        <section class="member-details-card" aria-label="Member details">
+          <div>
+            <p class="eyebrow">Member Details</p>
+            <h3>Names and ages are required for all members</h3>
+            <p class="hint">If you select 2 members, both member names and ages must be filled before confirming.</p>
+          </div>
+          <div id="memberDetails" class="member-details-grid"></div>
+        </section>
+
         <section class="coupon-card" aria-label="Coupon code">
           <div>
             <p class="eyebrow">Discount Coupon</p>
@@ -249,12 +246,23 @@
 
         <div class="form-row">
           <div>
-            <label for="customerName">Your Name</label>
+            <label for="customerName">Contact Person Name</label>
             <input type="text" id="customerName" placeholder="Enter full name" required />
           </div>
           <div>
+            <label for="email">Email for Booking Confirmation</label>
+            <input type="email" id="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
             <label for="phone">Phone Number</label>
             <input type="tel" id="phone" placeholder="10 digit mobile number" pattern="[0-9]{10}" required />
+          </div>
+          <div>
+            <label>Available Seats</label>
+            <div class="readonly-info" id="availableSeatsText">30 seats available</div>
           </div>
         </div>
 
@@ -276,6 +284,25 @@
             </select>
           </div>
         </div>
+
+        <section id="trekInclusionBox" class="trek-info-card" aria-label="Inclusions and exclusions">
+          <p class="hint">Select a trek to view inclusions and exclusions.</p>
+        </section>
+
+        <section class="terms-card" aria-label="Terms and consent">
+          <p class="eyebrow">Terms & Consent</p>
+          <h3>Read before confirming</h3>
+          <ul>
+            <li>Follow trek leader instructions throughout the journey.</li>
+            <li>Carry proper shoes, water, rainwear, torch and personal medicines.</li>
+            <li>Weather, route or safety changes may affect schedule.</li>
+            <li>Refunds/transfers follow the cancellation policy page.</li>
+          </ul>
+          <label class="checkbox-line" for="termsConsent">
+            <input type="checkbox" id="termsConsent" required />
+            <span>I accept the terms and conditions and give consent to join this trek at my own responsibility.</span>
+          </label>
+        </section>
 
         <section class="payment-card" aria-label="Payment option">
           <div class="payment-head">
@@ -326,9 +353,11 @@
           <dl class="summary-grid">
             <div><dt>Booking ID</dt><dd id="summaryBookingId">GT-0000</dd></div>
             <div><dt>Name</dt><dd id="summaryName">Not entered</dd></div>
+            <div><dt>Email</dt><dd id="summaryEmail">Not entered</dd></div>
             <div><dt>Selected Trek</dt><dd id="summaryTrek">Not selected</dd></div>
             <div><dt>Batch Date</dt><dd id="summaryDate">Not selected</dd></div>
             <div><dt>Members</dt><dd id="summaryMembers">1</dd></div>
+            <div><dt>Available Seats</dt><dd id="summaryAvailableSeats">30</dd></div>
             <div><dt>Payment Method</dt><dd id="summaryPayment">Not selected</dd></div>
             <div><dt>Pickup Point</dt><dd id="summaryPickup">Not selected</dd></div>
             <div><dt>Drop Point</dt><dd id="summaryDropPoint">Not selected</dd></div>
@@ -359,6 +388,7 @@
           <p id="confirmationText"></p>
           <a id="whatsappBtn" class="primary-btn full-btn whatsapp-btn hidden" href="#" target="_blank" rel="noopener">Open WhatsApp Channel</a>
           <button id="downloadTicketBtn" class="secondary-btn full-btn hidden" type="button">Download PDF Ticket</button>
+          <a class="secondary-btn full-btn" href="mailto:thegreentrekkers5@gmail.com?subject=The%20Green%20Trekkers%20Feedback">Review / Feedback</a>
           <button id="newBookingBtn" class="secondary-btn" type="button">Make New Booking</button>
         </div>
       </aside>
@@ -385,6 +415,9 @@
           <p>“Konkan Kada sunrise was unforgettable. Good support, clear instructions and amazing memories.”</p>
           <strong>— Sneha, Chakan</strong>
         </article>
+      </div>
+      <div class="feedback-box">
+        <a class="primary-btn" href="mailto:thegreentrekkers5@gmail.com?subject=The%20Green%20Trekkers%20Feedback">Share Review / Feedback</a>
       </div>
     </section>
 
@@ -466,4 +499,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
