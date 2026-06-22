@@ -55,14 +55,36 @@
 
     <section class="upload-gallery-card reveal">
       <div>
-        <p class="eyebrow">Add Your Photos</p>
-        <h2>Gallery Upload Demo</h2>
-        <p>Upload photos locally for your project demo. They will preview in your browser.</p>
+        <p class="eyebrow">Submit Photos</p>
+        <h2>Upload for Admin Review</h2>
+        <p>Visitors can submit trek photos. They will remain hidden until the admin approves them from the admin panel.</p>
       </div>
-      <label class="file-drop" for="galleryUpload">📸 Choose Gallery Photos</label>
-      <input id="galleryUpload" type="file" accept="image/*" multiple hidden />
-      <div id="uploadedGallery" class="uploaded-gallery"></div>
+      <form id="galleryUploadForm" class="gallery-submit-form" novalidate>
+        <div class="form-row">
+          <div>
+            <label for="galleryUploaderName">Your Name</label>
+            <input id="galleryUploaderName" type="text" placeholder="Full name" required />
+          </div>
+          <div>
+            <label for="galleryUploaderEmail">Email</label>
+            <input id="galleryUploaderEmail" type="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <label for="galleryCaptionInput">Caption</label>
+        <input id="galleryCaptionInput" type="text" placeholder="Example: Harishchandragad sunrise" required />
+        <label class="file-drop" for="galleryUpload">📸 Choose One Photo</label>
+        <input id="galleryUpload" type="file" accept="image/*" hidden required />
+        <button class="primary-btn" type="submit">Submit Photo for Approval</button>
+        <p id="galleryUploadMessage" class="message" role="status"></p>
+      </form>
     </section>
+
+    <section class="approved-gallery-title section-heading compact reveal">
+      <p class="eyebrow">Approved Community Photos</p>
+      <h2>Photos Approved by Admin</h2>
+      <p>Only approved visitor uploads appear here.</p>
+    </section>
+    <section class="gallery-grid reveal" id="approvedGallery" aria-label="Approved visitor gallery"></section>
   </main>
 
   <div id="galleryModal" class="gallery-modal hidden" role="dialog" aria-modal="true" aria-label="Gallery image preview">
