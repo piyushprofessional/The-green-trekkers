@@ -451,7 +451,11 @@
       try {
         const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
         Object.assign(booking, savedBooking);
-        await apiFetch("/api/send-confirmation", { method: "POST", body: JSON.stringify({ booking }) });
+        try {
+          await apiFetch("/api/send-confirmation", { method: "POST", body: JSON.stringify({ booking }) });
+        } catch (emailError) {
+          console.warn("Booking saved, but confirmation email failed:", emailError);
+        }
         await loadPublicData();
       } catch (error) {
         return showMessage(bookingMessage, error.message || "Booking could not be saved. Please try again.", true);
@@ -665,5 +669,6 @@
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "green-trekkers-bookings.csv"; document.body.appendChild(a); a.click(); a.remove();
   });
 })();
+
 
 
