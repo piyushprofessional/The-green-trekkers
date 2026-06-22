@@ -10,11 +10,10 @@ const fs = require('fs');
 const path = require('path');
 let nodemailer;
 try { nodemailer = require('nodemailer'); } catch (_) { nodemailer = null; }
+let Resend;
+try { ({ Resend } = require('resend')); } catch (_) { Resend = null; }
 
 const app = express();
-
-// Required on Render/proxy hosting so express-rate-limit can read client IP correctly
-app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -233,6 +232,19 @@ app.post('/api/send-confirmation', async (req, res) => {
     const memberText = Array.isArray(booking.memberDetails) ? booking.memberDetails.map((m, i) => `${i + 1}. ${sanitizeString(m.name, 80)} (${Number(m.age) || 0} yrs)`).join('\n') : '';
     const text = `Hello ${sanitizeString(booking.customerName, 80)},\n\nYour trek booking has been received.\n\nBooking ID: ${sanitizeString(booking.bookingId, 40)}\nTrek: ${sanitizeString(booking.trek, 120)}\nDate: ${sanitizeString(booking.date, 80)}\nMembers: ${Number(booking.members) || 1}\n${memberText}\nPickup: ${sanitizeString(booking.pickup, 80)}\nDrop: ${sanitizeString(booking.dropPoint, 80)}\nSubtotal: Rs. ${Number(booking.subtotal || 0)}\nCoupon: ${sanitizeString(booking.couponCode || 'Not applied', 40)}\nDiscount: Rs. ${Number(booking.discountAmount || 0)}\nTotal: Rs. ${Number(booking.total || 0)}\nPayment Status: ${sanitizeString(booking.paymentStatus, 80)}\n\nTerms and trek consent: Accepted\n\nSupport: 9535917287 / 8668971953\nEmail: thegreentrekkers5@gmail.com\nFeedback: mailto:thegreentrekkers5@gmail.com?subject=The%20Green%20Trekkers%20Feedback\nWhatsApp Channel: https://whatsapp.com/channel/0029Vb8vXbYDjiOiMpjSqh1X\nInstagram: https://www.instagram.com/the_green_trekkers?igsh=MTM0dnI0cDhzcHhn`;
 
+    // Preferred on Render Free: Resend uses HTTPS API, not blocked SMTP ports.
+    if (Resend && process.env.RESEND_API_KEY && booking.email) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: process.env.MAIL_FROM || 'The Green Trekkers <onboarding@resend.dev>',
+        to: booking.email,
+        subject,
+        text
+      });
+      return res.json({ sent: true, provider: 'resend' });
+    }
+
+    // Local fallback: Gmail/SMTP. This may timeout on Render Free because SMTP ports are blocked.
     if (nodemailer && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && booking.email) {
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -241,19 +253,19 @@ app.post('/api/send-confirmation', async (req, res) => {
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
       });
       await transporter.sendMail({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to: booking.email, subject, text });
-      return res.json({ sent: true });
+      return res.json({ sent: true, provider: 'smtp' });
     }
 
     console.log('\n--- EMAIL CONFIRMATION DEMO ---');
     console.log(subject);
     console.log(text);
-    console.log('Set SMTP_HOST, SMTP_USER, SMTP_PASS to send real email.');
-    return res.json({ sent: false, demo: true, message: 'Email printed in server console because SMTP is not configured.' });
+    console.log('Set RESEND_API_KEY and MAIL_FROM on Render to send real email.');
+    return res.json({ sent: false, demo: true, message: 'Email printed in server console because email provider is not configured.' });
   } catch (error) {
     console.error('Email confirmation failed:', error.message || error);
     return res.json({
       sent: false,
-      warning: 'Booking is saved, but confirmation email could not be sent. Check SMTP_USER and SMTP_PASS/App Password.'
+      warning: 'Booking is saved, but confirmation email could not be sent. Check RESEND_API_KEY/MAIL_FROM or SMTP settings.'
     });
   }
 });
@@ -302,3 +314,4 @@ app.listen(PORT, () => {
   console.log(`The Green Trekkers secure server running on http://localhost:${PORT}`);
   console.log(`Admin login page: http://localhost:${PORT}/admin-login.html`);
 });
+
