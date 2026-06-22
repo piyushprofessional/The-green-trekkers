@@ -451,11 +451,17 @@
       try {
         const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
         Object.assign(booking, savedBooking);
+        let emailSent = false;
+        let emailProvider = "";
         try {
-          await apiFetch("/api/send-confirmation", { method: "POST", body: JSON.stringify({ booking }) });
+          const emailResult = await apiFetch("/api/send-confirmation", { method: "POST", body: JSON.stringify({ booking }) });
+          emailSent = Boolean(emailResult && emailResult.sent);
+          emailProvider = emailResult && emailResult.provider ? emailResult.provider : "";
         } catch (emailError) {
           console.warn("Booking saved, but confirmation email failed:", emailError);
         }
+        booking.emailSent = emailSent;
+        booking.emailProvider = emailProvider;
         await loadPublicData();
       } catch (error) {
         return showMessage(bookingMessage, error.message || "Booking could not be saved. Please try again.", true);
@@ -468,7 +474,7 @@
         <p><strong>Trek:</strong> ${booking.trek}</p><p><strong>Date:</strong> ${booking.date}</p><p><strong>Members:</strong><br>${memberLines}</p>
         <p><strong>Pickup:</strong> ${booking.pickup} &nbsp; <strong>Drop:</strong> ${booking.dropPoint}</p>
         <p><strong>Subtotal:</strong> ${rupee.format(booking.subtotal)} | <strong>Discount:</strong> ${rupee.format(booking.discountAmount || 0)} | <strong>Total:</strong> ${rupee.format(booking.total)}</p>
-        <p><strong>Payment:</strong> ${booking.paymentStatus}</p><p class="small-note">Confirmation email has been sent if SMTP is configured on hosting.</p>
+        <p><strong>Payment:</strong> ${booking.paymentStatus}</p><p class="small-note">${booking.emailSent ? "Confirmation email sent successfully." : "Booking saved. Email will send after Resend is configured on hosting."}</p>
         <a href="${feedbackLink}" class="secondary-btn full-btn">Share Review / Feedback</a></div>`;
       if (whatsappBtn) {
         whatsappBtn.href = whatsappNumber ? "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(buildWhatsappMessage(booking)) : whatsappChannelLink;
@@ -477,7 +483,7 @@
       }
       if (downloadTicketBtn) downloadTicketBtn.classList.remove("hidden");
       if (confirmationBox) confirmationBox.classList.remove("hidden");
-      showMessage(bookingMessage, "Booking saved successfully. Ticket is ready and confirmation email will be sent when SMTP is configured.", false);
+      showMessage(bookingMessage, booking.emailSent ? "Booking saved successfully. Ticket is ready and confirmation email has been sent." : "Booking saved successfully. Ticket is ready. Email will be sent after Resend is configured.", false);
       updateSummary(); renderDynamicBatches(); if (confirmationBox) confirmationBox.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   }
@@ -669,6 +675,7 @@
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "green-trekkers-bookings.csv"; document.body.appendChild(a); a.click(); a.remove();
   });
 })();
+
 
 
 
