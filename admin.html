@@ -70,6 +70,8 @@
           <input id="adminBatchDate" placeholder="15 August 2026" required />
           <label for="adminBatchPrice">Price</label>
           <input id="adminBatchPrice" type="number" min="100" value="1499" required />
+          <label for="adminBatchSeats">Seat Limit</label>
+          <input id="adminBatchSeats" type="number" min="0" value="30" required />
           <button class="primary-btn full-btn" type="submit">Save Batch</button>
           <p id="adminBatchMessage" class="message"></p>
         </form>
@@ -77,7 +79,12 @@
 
       <section class="admin-table-card reveal">
         <div class="admin-table-head"><div><p class="eyebrow">Bookings</p><h2>Booking List & Payment Status</h2></div><p id="backendStatus" class="backend-status">Backend: checking...</p></div>
-        <div class="table-scroll"><table class="batch-table admin-table"><thead><tr><th>Booking ID</th><th>Name</th><th>Trek</th><th>Date</th><th>Pickup</th><th>Drop</th><th>Total</th><th>Coupon</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminBookingBody"></tbody></table></div>
+        <div class="table-scroll"><table class="batch-table admin-table"><thead><tr><th>Booking ID</th><th>Customer</th><th>Trek</th><th>Date</th><th>Members</th><th>Pickup</th><th>Drop</th><th>Total</th><th>Coupon</th><th>Consent</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminBookingBody"></tbody></table></div>
+      </section>
+
+      <section class="admin-table-card reveal">
+        <div class="admin-table-head"><div><p class="eyebrow">Gallery Approval</p><h2>Pending Photo Uploads</h2></div><p class="backend-status">Approve photos before they show on public gallery.</p></div>
+        <div id="adminGalleryList" class="admin-list"></div>
       </section>
 
       <section class="admin-grid reveal">
