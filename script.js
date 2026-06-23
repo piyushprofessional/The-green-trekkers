@@ -30,42 +30,45 @@
     { id: "B-AND-01", trek: "Andharban Jungle Trek", note: "Mist, forest + waterfall trail", date: "Coming Soon", price: 1799, seatLimit: 0, available: false }
   ];
 
+  const trekInclusions = ["Travel by Private Vehicle", "Breakfast", "Lunch", "Trek Leader & Guide Charges", "First Aid Support", "Entry Fees", "Fun, Adventure & Memories"];
+  const trekExclusions = ["Personal Expenses", "Mineral Water / Cold Drinks", "Any Food Ordered Apart from Scheduled Meals", "Medical Expenses", "Insurance Coverage", "Anything Not Mentioned in Inclusions"];
+
   const defaultTreks = [
     {
       id: "T-RAJ", name: "Rajmachi Fort Trek", difficulty: "Beginner", duration: "1 Day / 1 Night", available: false,
       description: "Night trail near Lonavala with fireflies and forest route.",
-      inclusions: ["Basic trek leader guidance", "Route coordination", "Group support"],
-      exclusions: ["Meals unless mentioned", "Personal expenses", "Insurance", "Anything not mentioned in inclusions"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     },
     {
       id: "T-KAL", name: "Kalsubai Peak Trek", difficulty: "Moderate", duration: "1 Day", available: false,
       description: "Maharashtra's highest peak with sunrise views.",
-      inclusions: ["Trek leader guidance", "Route coordination", "Basic first aid"],
-      exclusions: ["Meals unless mentioned", "Personal expenses", "Insurance", "Transport unless mentioned"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     },
     {
       id: "T-DEV", name: "Devkund Waterfall Trek", difficulty: "Beginner", duration: "1 Day", available: false,
       description: "Jungle trail ending at a waterfall.",
-      inclusions: ["Guide support", "Route coordination", "Basic first aid"],
-      exclusions: ["Meals unless mentioned", "Personal expenses", "Insurance", "Entry charges if any"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     },
     {
       id: "T-HAR", name: "Harishchandragad Trek", difficulty: "Difficult", duration: "1 Day / 1 Night", available: true,
       description: "Konkan Kada, caves and sunrise route. Fixed batch starts on 04 July at 11:00 PM.",
-      inclusions: ["Experienced trek leader", "Route guidance", "Basic first-aid support", "Pickup/drop coordination from Moshi or Chakan", "Booking confirmation ticket"],
-      exclusions: ["Meals unless specifically announced", "Personal expenses", "Trekking shoes/rainwear/torch", "Travel insurance", "Anything not mentioned in inclusions"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     },
     {
       id: "T-SAN", name: "Sandhan Valley Trek", difficulty: "Adventure", duration: "2 Days", available: false,
       description: "Camping, valley route and adventure patches.",
-      inclusions: ["Guide support", "Route coordination", "Basic first aid"],
-      exclusions: ["Meals unless mentioned", "Personal expenses", "Insurance", "Rental gear"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     },
     {
       id: "T-AND", name: "Andharban Jungle Trek", difficulty: "Moderate", duration: "1 Day", available: false,
       description: "Descending forest trek with mist and waterfalls.",
-      inclusions: ["Guide support", "Route coordination", "Basic first aid"],
-      exclusions: ["Meals unless mentioned", "Personal expenses", "Insurance", "Transport unless mentioned"]
+      inclusions: trekInclusions,
+      exclusions: trekExclusions
     }
   ];
 
@@ -652,7 +655,7 @@
   const adminTrekForm = $("#adminTrekForm");
   if (adminTrekForm) adminTrekForm.addEventListener("submit", async e => {
     e.preventDefault();
-    const trek = { id: "T-" + Date.now(), name: $("#adminTrekName").value.trim(), difficulty: $("#adminTrekDifficulty").value, duration: $("#adminTrekDuration").value.trim(), description: $("#adminTrekDesc").value.trim(), available: false, inclusions: ["Guide support", "Route coordination"], exclusions: ["Meals unless mentioned", "Personal expenses"] };
+    const trek = { id: "T-" + Date.now(), name: $("#adminTrekName").value.trim(), difficulty: $("#adminTrekDifficulty").value, duration: $("#adminTrekDuration").value.trim(), description: $("#adminTrekDesc").value.trim(), available: false, inclusions: trekInclusions, exclusions: trekExclusions };
     if (!trek.name || !trek.duration || !trek.description) return showMessage($("#adminTrekMessage"), "Please fill all trek details.", true);
     try { await apiFetch("/api/admin/treks", { method: "POST", body: JSON.stringify(trek) }); adminTrekForm.reset(); showMessage($("#adminTrekMessage"), "Trek saved securely.", false); await renderAdminData(); } catch (error) { showMessage($("#adminTrekMessage"), error.message || "Could not save trek.", true); }
   });
@@ -675,6 +678,7 @@
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "green-trekkers-bookings.csv"; document.body.appendChild(a); a.click(); a.remove();
   });
 })();
+
 
 
 
