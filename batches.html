@@ -79,6 +79,37 @@
       text-transform: uppercase;
     }
 
+
+    .consent-text {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(25, 90, 43, 0.10);
+      border: 1px solid rgba(78, 181, 92, 0.22);
+      color: inherit;
+      line-height: 1.65;
+    }
+
+    .payment-lock-note {
+      margin: 16px 0;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255, 247, 223, .95), rgba(238, 248, 232, .95));
+      border: 1px solid rgba(47,125,50,.20);
+      color: #123b1f;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(8, 36, 20, 0.08);
+    }
+
+    html[data-theme="dark"] .payment-lock-note,
+    html[data-theme="dark"] .consent-text {
+      background: rgba(16, 54, 29, 0.78);
+      border-color: rgba(116, 255, 138, 0.22);
+      color: #d8ffd8;
+    }
+
     @media (max-width: 720px) {
       .coupon-card,
       .coupon-input-row {
@@ -289,26 +320,26 @@
           <p class="hint">Select a trek to view inclusions and exclusions.</p>
         </section>
 
-        <section class="terms-card" aria-label="Terms and consent">
-          <p class="eyebrow">Terms & Consent</p>
-          <h3>Read before confirming</h3>
-          <ul>
-            <li>1.Participants must follow instructions given by trek leaders.</li>
-            <li>2.Littering is strictly prohibited. Help us keep nature clean.</li>
-            <li>3.Alcohol, smoking, and any intoxicating substances are strictly prohibited during the trek.</li>
-            <li>4.The organizer reserves the right to change the itinerary due to weather or safety concerns.</li>
-            <li>5.No refund will be provided for no-shows or last-minute cancellations as per the cancellation policy.</li>
-            <li>6.Participants are responsible for their personal belongings.</li>
-            <li>7.Trek fees are non-transferable unless approved by the organizer.</li>
-            <li>8.Any misconduct may lead to removal from the trek without refund.</li>
-          </ul>
+        <section class="terms-card" aria-label="Participant consent">
+          <p class="eyebrow">Participant Consent</p>
+          <h3>Read and accept before payment</h3>
+          <div class="consent-text">
+            <p>I voluntarily agree to participate in this trek organized by The Green Trekkers.</p>
+            <p>I understand that trekking involves inherent risks, including but not limited to slips, falls, weather changes, and natural hazards.</p>
+            <p>I confirm that I am physically fit to participate and will follow all instructions provided by the trek leaders.</p>
+            <p>I agree that The Green Trekkers, its organizers, volunteers, and trek leaders shall not be held responsible for any injury, loss, damage, accident, delay, or unforeseen circumstances during the trek.</p>
+            <p>I participate entirely at my own risk and responsibility.</p>
+            <p>By registering for the trek, I acknowledge that I have read, understood, and accepted all the above terms and conditions.</p>
+          </div>
           <label class="checkbox-line" for="termsConsent">
             <input type="checkbox" id="termsConsent" required />
-            <span>I accept the terms and conditions and give consent to join this trek at my own responsibility.</span>
+            <span>I have read, understood, and accepted the participant consent and terms before proceeding to payment.</span>
           </label>
         </section>
 
-        <section class="payment-card" aria-label="Payment option">
+        <p id="paymentLockedNote" class="payment-lock-note">Accept the participant consent above to view payment options.</p>
+
+        <section class="payment-card hidden" aria-label="Payment option">
           <div class="payment-head">
             <div>
               <p class="eyebrow">Payment Option</p>
