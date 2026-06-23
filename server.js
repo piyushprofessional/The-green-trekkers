@@ -58,13 +58,16 @@ const ALLOWED_PRICE = 1199;
 const ALLOWED_PICKUPS = ['Moshi', 'Chakan'];
 const DEFAULT_SEAT_LIMIT = Number(process.env.HARISHCHANDRAGAD_SEAT_LIMIT || 30);
 
+const trekInclusions = ['Travel by Private Vehicle', 'Breakfast', 'Lunch', 'Trek Leader & Guide Charges', 'First Aid Support', 'Entry Fees', 'Fun, Adventure & Memories'];
+const trekExclusions = ['Personal Expenses', 'Mineral Water / Cold Drinks', 'Any Food Ordered Apart from Scheduled Meals', 'Medical Expenses', 'Insurance Coverage', 'Anything Not Mentioned in Inclusions'];
+
 const defaultTreks = [
-  { id: 'T-RAJ', name: 'Rajmachi Fort Trek', difficulty: 'Beginner', duration: '1 Day / 1 Night', description: 'Night trail near Lonavala with fireflies and forest route.', available: false, inclusions: ['Basic trek leader guidance', 'Route coordination', 'Group support'], exclusions: ['Meals unless mentioned', 'Personal expenses', 'Insurance', 'Anything not mentioned in inclusions'] },
-  { id: 'T-KAL', name: 'Kalsubai Peak Trek', difficulty: 'Moderate', duration: '1 Day', description: "Maharashtra's highest peak with sunrise views.", available: false, inclusions: ['Trek leader guidance', 'Route coordination', 'Basic first aid'], exclusions: ['Meals unless mentioned', 'Personal expenses', 'Insurance', 'Transport unless mentioned'] },
-  { id: 'T-DEV', name: 'Devkund Waterfall Trek', difficulty: 'Beginner', duration: '1 Day', description: 'Jungle trail ending at a waterfall.', available: false, inclusions: ['Guide support', 'Route coordination', 'Basic first aid'], exclusions: ['Meals unless mentioned', 'Personal expenses', 'Insurance', 'Entry charges if any'] },
-  { id: 'T-HAR', name: ALLOWED_TREK, difficulty: 'Difficult', duration: '1 Day / 1 Night', description: 'Konkan Kada, caves and sunrise route. Fixed batch starts on 04 July at 11:00 PM.', available: true, inclusions: ['Experienced trek leader', 'Route guidance', 'Basic first-aid support', 'Pickup/drop coordination from Moshi or Chakan', 'Booking confirmation ticket'], exclusions: ['Meals unless specifically announced', 'Personal expenses', 'Trekking shoes/rainwear/torch', 'Travel insurance', 'Anything not mentioned in inclusions'] },
-  { id: 'T-SAN', name: 'Sandhan Valley Trek', difficulty: 'Adventure', duration: '2 Days', description: 'Camping, valley route and adventure patches.', available: false, inclusions: ['Guide support', 'Route coordination', 'Basic first aid'], exclusions: ['Meals unless mentioned', 'Personal expenses', 'Insurance', 'Rental gear'] },
-  { id: 'T-AND', name: 'Andharban Jungle Trek', difficulty: 'Moderate', duration: '1 Day', description: 'Descending forest trek with mist and waterfalls.', available: false, inclusions: ['Guide support', 'Route coordination', 'Basic first aid'], exclusions: ['Meals unless mentioned', 'Personal expenses', 'Insurance', 'Transport unless mentioned'] }
+  { id: 'T-RAJ', name: 'Rajmachi Fort Trek', difficulty: 'Beginner', duration: '1 Day / 1 Night', description: 'Night trail near Lonavala with fireflies and forest route.', available: false, inclusions: trekInclusions, exclusions: trekExclusions },
+  { id: 'T-KAL', name: 'Kalsubai Peak Trek', difficulty: 'Moderate', duration: '1 Day', description: "Maharashtra's highest peak with sunrise views.", available: false, inclusions: trekInclusions, exclusions: trekExclusions },
+  { id: 'T-DEV', name: 'Devkund Waterfall Trek', difficulty: 'Beginner', duration: '1 Day', description: 'Jungle trail ending at a waterfall.', available: false, inclusions: trekInclusions, exclusions: trekExclusions },
+  { id: 'T-HAR', name: ALLOWED_TREK, difficulty: 'Difficult', duration: '1 Day / 1 Night', description: 'Konkan Kada, caves and sunrise route. Fixed batch starts on 04 July at 11:00 PM.', available: true, inclusions: trekInclusions, exclusions: trekExclusions },
+  { id: 'T-SAN', name: 'Sandhan Valley Trek', difficulty: 'Adventure', duration: '2 Days', description: 'Camping, valley route and adventure patches.', available: false, inclusions: trekInclusions, exclusions: trekExclusions },
+  { id: 'T-AND', name: 'Andharban Jungle Trek', difficulty: 'Moderate', duration: '1 Day', description: 'Descending forest trek with mist and waterfalls.', available: false, inclusions: trekInclusions, exclusions: trekExclusions }
 ];
 
 const defaultBatches = [
@@ -86,7 +89,10 @@ function ensureDb() {
   if (!Array.isArray(db.bookings)) db.bookings = [];
   if (!Array.isArray(db.gallerySubmissions)) db.gallerySubmissions = [];
   // Keep current business configuration synced.
-  db.treks = defaultTreks.map(def => ({ ...def, ...(db.treks.find(t => t.id === def.id) || {}) }));
+  db.treks = defaultTreks.map(def => {
+    const existing = db.treks.find(t => t.id === def.id) || {};
+    return { ...def, ...existing, inclusions: trekInclusions, exclusions: trekExclusions };
+  });
   db.batches = defaultBatches.map(def => ({ ...def, ...(db.batches.find(b => b.id === def.id) || {}) }));
   const harishBatch = db.batches.find(b => b.id === 'B-HAR-01');
   if (harishBatch) { harishBatch.trek = ALLOWED_TREK; harishBatch.date = ALLOWED_DATE; harishBatch.price = ALLOWED_PRICE; harishBatch.available = true; harishBatch.seatLimit = Number(harishBatch.seatLimit || DEFAULT_SEAT_LIMIT); }
