@@ -193,7 +193,7 @@
 
   // Booking page
   const bookingForm = $("#bookingForm");
-  const selectedTrek = $("#selectedTrek"), selectedDate = $("#selectedDate"), selectedPrice = $("#selectedPrice"), selectedAmount = $("#selectedAmount"), membersInput = $("#members"), totalAmount = $("#totalAmount"), couponCodeInput = $("#couponCode"), applyCouponBtn = $("#applyCouponBtn"), couponMessage = $("#couponMessage"), bookingMessage = $("#bookingMessage"), confirmationBox = $("#confirmationBox"), confirmationText = $("#confirmationText"), newBookingBtn = $("#newBookingBtn"), paymentScreenshot = $("#paymentScreenshot"), screenshotName = $("#screenshotName"), bookingIdInput = $("#bookingId"), whatsappBtn = $("#whatsappBtn"), downloadTicketBtn = $("#downloadTicketBtn"), memberDetailsWrap = $("#memberDetails"), availableSeatsText = $("#availableSeatsText"), termsConsent = $("#termsConsent");
+  const selectedTrek = $("#selectedTrek"), selectedDate = $("#selectedDate"), selectedPrice = $("#selectedPrice"), selectedAmount = $("#selectedAmount"), membersInput = $("#members"), totalAmount = $("#totalAmount"), couponCodeInput = $("#couponCode"), applyCouponBtn = $("#applyCouponBtn"), couponMessage = $("#couponMessage"), bookingMessage = $("#bookingMessage"), confirmationBox = $("#confirmationBox"), confirmationText = $("#confirmationText"), newBookingBtn = $("#newBookingBtn"), paymentScreenshot = $("#paymentScreenshot"), screenshotName = $("#screenshotName"), bookingIdInput = $("#bookingId"), whatsappBtn = $("#whatsappBtn"), downloadTicketBtn = $("#downloadTicketBtn"), memberDetailsWrap = $("#memberDetails"), availableSeatsText = $("#availableSeatsText"), termsConsent = $("#termsConsent"), paymentCard = $(".payment-card"), paymentLockedNote = $("#paymentLockedNote");
   let appliedCoupon = { code: "", percent: 0 };
   let lastConfirmedBooking = null;
 
@@ -219,6 +219,22 @@
     if (!batch || batch.available === false) return 0;
     if (typeof batch.availableSeats === "number") return Math.max(0, batch.availableSeats);
     return Math.max(0, Number(batch.seatLimit || 30) - Number(batch.bookedMembers || 0));
+  }
+
+  function updatePaymentVisibility() {
+    if (!paymentCard || !termsConsent) return;
+    const accepted = termsConsent.checked;
+    paymentCard.classList.toggle("hidden", !accepted);
+    if (paymentLockedNote) paymentLockedNote.classList.toggle("hidden", accepted);
+    if (!accepted) {
+      const paymentMode = $("#paymentMode");
+      if (paymentMode) paymentMode.value = "";
+      if (paymentScreenshot) paymentScreenshot.value = "";
+      if (screenshotName) screenshotName.textContent = "Accept consent first, then select payment option.";
+    } else if (screenshotName && !getScreenshotFileName()) {
+      screenshotName.textContent = "Optional for 'Will Pay Later'. Required after UPI payment.";
+    }
+    updateSummary();
   }
 
   function statusFromMode(mode, screenshot, finalTotal) {
@@ -428,6 +444,7 @@
       couponCodeInput.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); applyCoupon(true); } });
     }
     if (paymentScreenshot) paymentScreenshot.addEventListener("change", () => { const fileName = getScreenshotFileName(); if (screenshotName) screenshotName.textContent = fileName ? "Uploaded: " + fileName : "Optional for 'Will Pay Later'. Required after UPI payment."; updateSummary(); });
+    if (termsConsent) { termsConsent.addEventListener("change", updatePaymentVisibility); updatePaymentVisibility(); }
 
     bookingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -447,9 +464,9 @@
       if (!dropPoint || !["Moshi", "Chakan"].includes(dropPoint)) return showMessage(bookingMessage, "Please select Moshi or Chakan drop point.", true);
       if (memberDetails.length !== members || memberDetails.some(m => m.name.length < 2 || !m.age || m.age < 5 || m.age > 75)) return showMessage(bookingMessage, "Please enter valid name and age for every member.", true);
       if (getAvailableSeats() < members) return showMessage(bookingMessage, `Only ${getAvailableSeats()} seats are available. Please reduce members.`, true);
+      if (!termsConsent || !termsConsent.checked) return showMessage(bookingMessage, "Please read and accept the participant consent before proceeding to payment and confirmation.", true);
       if (total > 0 && !paymentMode) return showMessage(bookingMessage, "Please select payment status.", true);
       if (total > 0 && paymentMode === "UPI Payment Done" && !paymentScreenshotName) return showMessage(bookingMessage, "Please upload your payment screenshot after UPI payment.", true);
-      if (!termsConsent || !termsConsent.checked) return showMessage(bookingMessage, "Please accept the terms, conditions and trek consent before confirming.", true);
       const booking = { bookingId, trek, date, price, members, memberDetails, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email, phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, consentAccepted: true, termsAcceptedAt: new Date().toISOString(), bookedAt: new Date().toISOString() };
       try {
         const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
@@ -492,7 +509,7 @@
   }
 
   if (newBookingBtn && bookingForm) newBookingBtn.addEventListener("click", () => {
-    bookingForm.reset(); appliedCoupon = { code: "", percent: 0 }; if (couponMessage) showMessage(couponMessage, "", false); if (selectedAmount) selectedAmount.value = "1199"; if (membersInput) membersInput.value = "1"; if (bookingIdInput) bookingIdInput.value = generateBookingId(); if (whatsappBtn) whatsappBtn.classList.add("hidden"); if (downloadTicketBtn) downloadTicketBtn.classList.add("hidden"); if (screenshotName) screenshotName.textContent = "Optional for 'Will Pay Later'. Required after UPI payment."; renderMemberDetails(); updateTotal(); updateTrekDetails(); if (confirmationBox) confirmationBox.classList.add("hidden"); showMessage(bookingMessage, "", false); bookingForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    bookingForm.reset(); appliedCoupon = { code: "", percent: 0 }; if (couponMessage) showMessage(couponMessage, "", false); if (selectedAmount) selectedAmount.value = "1199"; if (membersInput) membersInput.value = "1"; if (bookingIdInput) bookingIdInput.value = generateBookingId(); if (whatsappBtn) whatsappBtn.classList.add("hidden"); if (downloadTicketBtn) downloadTicketBtn.classList.add("hidden"); if (screenshotName) screenshotName.textContent = "Accept consent first, then select payment option."; renderMemberDetails(); updateTotal(); updateTrekDetails(); updatePaymentVisibility(); if (confirmationBox) confirmationBox.classList.add("hidden"); showMessage(bookingMessage, "", false); bookingForm.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   if (downloadTicketBtn) downloadTicketBtn.addEventListener("click", () => downloadReceiptPdf(lastConfirmedBooking || readJSON("greenTrekkersLastBooking", null)));
 
@@ -678,6 +695,7 @@
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "green-trekkers-bookings.csv"; document.body.appendChild(a); a.click(); a.remove();
   });
 })();
+
 
 
 
