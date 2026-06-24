@@ -339,12 +339,12 @@
 
         <p id="paymentLockedNote" class="payment-lock-note">Accept the participant consent above to view payment options.</p>
 
-        <section class="payment-card hidden" aria-label="Payment option">
+        <section class="payment-card hidden" aria-label="Razorpay payment option">
           <div class="payment-head">
             <div>
-              <p class="eyebrow">Payment Option</p>
-              <h3>Scan UPI QR Code</h3>
-              <p>Pay with Google Pay, PhonePe, Paytm or any UPI app.</p>
+              <p class="eyebrow">Online Payment</p>
+              <h3>Pay securely with Razorpay</h3>
+              <p>After accepting consent, click Confirm Booking to open the Razorpay payment popup.</p>
             </div>
             <div class="amount-box">
               <span>Total Amount</span>
@@ -354,23 +354,17 @@
 
           <div class="qr-layout">
             <div class="qr-card">
-              <img src="assets/upi-payment-qr.jpeg" alt="UPI QR code for The Green Trekkers payment" class="upi-qr" />
-              <span>Scan & Pay</span>
+              <span style="font-size:4rem;">💳</span>
+              <strong>Razorpay Checkout</strong>
+              <small>UPI • Cards • NetBanking • Wallets</small>
             </div>
             <div class="payment-steps">
-              <p><strong>Step 1:</strong> Select trek batch and number of members.</p>
-              <p><strong>Step 2:</strong> Scan this QR code with any UPI app.</p>
-              <p><strong>Step 3:</strong> Select payment status and confirm booking.</p>
-              <label for="paymentMode">Payment Status</label>
-              <select id="paymentMode" required>
-                <option value="">Select payment status</option>
-                <option>UPI Payment Done</option>
-                <option>Will Pay Later</option>
-              </select>
-
-              <label for="paymentScreenshot">Upload Payment Screenshot</label>
-              <input type="file" id="paymentScreenshot" accept="image/*" />
-              <small id="screenshotName" class="upload-note">Optional for “Will Pay Later”. Required after UPI payment.</small>
+              <p><strong>Step 1:</strong> Fill all booking details.</p>
+              <p><strong>Step 2:</strong> Accept participant consent.</p>
+              <p><strong>Step 3:</strong> Click Confirm Booking and complete Razorpay payment.</p>
+              <p><strong>Step 4:</strong> After successful payment, your booking ticket and email confirmation will be generated.</p>
+              <input type="hidden" id="paymentMode" value="Razorpay" />
+              <small id="screenshotName" class="upload-note">No screenshot needed. Razorpay payment is verified automatically.</small>
             </div>
           </div>
         </section>
@@ -404,7 +398,7 @@
           </dl>
         </section>
 
-        <button type="submit" class="primary-btn full-btn">Confirm Booking</button>
+        <button type="submit" class="primary-btn full-btn">Pay & Book with Razorpay</button>
         <p id="bookingMessage" class="message" role="status"></p>
       </form>
 
@@ -531,6 +525,7 @@
     </div>
   </footer>
 
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
