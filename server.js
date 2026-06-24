@@ -8,12 +8,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 let nodemailer;
 try { nodemailer = require('nodemailer'); } catch (_) { nodemailer = null; }
 let Resend;
 try { ({ Resend } = require('resend')); } catch (_) { Resend = null; }
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -50,6 +52,20 @@ function calculateDiscount(couponCode, subtotal) {
   if (!couponPercent) return null;
   const discountAmount = Math.round(safeSubtotal * couponPercent / 100);
   return { couponCode: code, couponPercent, discountAmount, total: Math.max(0, safeSubtotal - discountAmount) };
+}
+
+
+function calculateBookingPaymentAmount(body) {
+  const trek = sanitizeString(body.trek, 120);
+  const date = sanitizeString(body.date, 80);
+  if (trek !== ALLOWED_TREK || date !== ALLOWED_DATE) {
+    return { error: 'Only Harishchandragad Trek on 04 July 2026 at 11:00 PM is open for booking.' };
+  }
+  const members = Math.max(1, Math.min(Number(body.members) || 1, 10));
+  const subtotal = ALLOWED_PRICE * members;
+  const discountResult = calculateDiscount(body.couponCode, subtotal);
+  if (!discountResult) return { error: 'Invalid coupon code.' };
+  return { members, subtotal, total: discountResult.total, discountResult };
 }
 
 const ALLOWED_TREK = 'Harishchandragad Trek';
@@ -178,6 +194,95 @@ app.post('/api/coupons/validate', (req, res) => {
   res.json(result);
 });
 
+
+app.post('/api/razorpay/create-order', async (req, res) => {
+  try {
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      return res.status(500).json({ error: 'Razorpay keys are not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Render Environment.' });
+    }
+
+    if (typeof fetch !== 'function') {
+      return res.status(500).json({ error: 'This Node.js version does not support fetch. Use Node 18+ on Render.' });
+    }
+
+    const payment = calculateBookingPaymentAmount(req.body || {});
+    if (payment.error) return res.status(400).json({ error: payment.error });
+    if (payment.total <= 0) return res.status(400).json({ error: 'No online payment needed because total is zero after coupon.' });
+
+    const receipt = sanitizeString(req.body.bookingId || id('GT'), 40);
+    const response = await fetch('https://api.razorpay.com/v1/orders', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Basic ' + Buffer.from(keyId + ':' + keySecret).toString('base64'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: payment.total * 100,
+        currency: 'INR',
+        receipt,
+        notes: {
+          bookingId: receipt,
+          trek: ALLOWED_TREK,
+          date: ALLOWED_DATE,
+          members: String(payment.members)
+        }
+      })
+    });
+
+    const order = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return res.status(500).json({ error: (order.error && order.error.description) || 'Unable to create Razorpay order.' });
+    }
+
+    res.json({
+      key: keyId,
+      order,
+      amount: payment.total,
+      subtotal: payment.subtotal,
+      discountAmount: payment.discountResult.discountAmount
+    });
+  } catch (error) {
+    console.error('Razorpay order error:', error.message || error);
+    res.status(500).json({ error: 'Razorpay order creation failed.' });
+  }
+});
+
+app.post('/api/razorpay/verify-payment', async (req, res) => {
+  try {
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    if (!keySecret) return res.status(500).json({ error: 'Razorpay secret is not configured.' });
+
+    const razorpay_order_id = sanitizeString(req.body.razorpay_order_id, 120);
+    const razorpay_payment_id = sanitizeString(req.body.razorpay_payment_id, 120);
+    const razorpay_signature = sanitizeString(req.body.razorpay_signature, 200);
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: 'Payment verification data is missing.' });
+    }
+
+    const expectedSignature = crypto
+      .createHmac('sha256', keySecret)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({ error: 'Payment verification failed.' });
+    }
+
+    res.json({
+      success: true,
+      paymentId: razorpay_payment_id,
+      orderId: razorpay_order_id
+    });
+  } catch (error) {
+    console.error('Razorpay verification error:', error.message || error);
+    res.status(500).json({ error: 'Payment verification failed.' });
+  }
+});
+
 app.post('/api/bookings', (req, res) => {
   const db = readDb();
   const trek = sanitizeString(req.body.trek, 120);
@@ -210,15 +315,21 @@ app.post('/api/bookings', (req, res) => {
 
   const paymentModeFromClient = sanitizeString(req.body.paymentMode, 80);
   const paymentStatusFromClient = sanitizeString(req.body.paymentStatus || 'Payment Pending', 80);
-  if (discountResult.total > 0 && !paymentModeFromClient) return res.status(400).json({ error: 'Payment status is required.' });
+  const razorpayPaymentId = sanitizeString(req.body.razorpayPaymentId, 120);
+  const razorpayOrderId = sanitizeString(req.body.razorpayOrderId, 120);
+  if (discountResult.total > 0 && (paymentModeFromClient !== 'Razorpay' || paymentStatusFromClient !== 'Paid' || !razorpayPaymentId || !razorpayOrderId)) {
+    return res.status(400).json({ error: 'Verified Razorpay payment is required before booking confirmation.' });
+  }
 
   const booking = {
     bookingId: sanitizeString(req.body.bookingId || id('GT'), 40),
     trek, date, price: `₹${amount}`, members, memberDetails, amount, subtotal,
     couponCode: discountResult.couponCode, couponPercent: discountResult.couponPercent, discountAmount: discountResult.discountAmount, total: discountResult.total,
     customerName, email, phone, pickup, dropPoint,
-    paymentMode: discountResult.total === 0 ? 'Coupon / Free Booking' : paymentModeFromClient,
-    paymentStatus: discountResult.total === 0 ? 'Coupon Free Booking' : paymentStatusFromClient,
+    paymentMode: discountResult.total === 0 ? 'Coupon / Free Booking' : 'Razorpay',
+    paymentStatus: discountResult.total === 0 ? 'Coupon Free Booking' : 'Paid',
+    razorpayPaymentId,
+    razorpayOrderId,
     paymentScreenshot: sanitizeString(req.body.paymentScreenshot, 160),
     consentAccepted: true,
     termsVersion: '2026-06-22',
