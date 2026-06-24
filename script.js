@@ -224,21 +224,23 @@
   function updatePaymentVisibility() {
     if (!paymentCard || !termsConsent) return;
     const accepted = termsConsent.checked;
+    const paymentMode = $("#paymentMode");
+    if (paymentMode) paymentMode.value = "Razorpay";
     paymentCard.classList.toggle("hidden", !accepted);
     if (paymentLockedNote) paymentLockedNote.classList.toggle("hidden", accepted);
     if (!accepted) {
-      const paymentMode = $("#paymentMode");
-      if (paymentMode) paymentMode.value = "";
+      if (paymentMode) paymentMode.value = "Razorpay";
       if (paymentScreenshot) paymentScreenshot.value = "";
-      if (screenshotName) screenshotName.textContent = "Accept consent first, then select payment option.";
+      if (screenshotName) screenshotName.textContent = "No screenshot needed. Razorpay payment is verified automatically.";
     } else if (screenshotName && !getScreenshotFileName()) {
-      screenshotName.textContent = "Optional for 'Will Pay Later'. Required after UPI payment.";
+      screenshotName.textContent = "No screenshot needed. Razorpay payment is verified automatically.";
     }
     updateSummary();
   }
 
   function statusFromMode(mode, screenshot, finalTotal) {
     if (Number(finalTotal) === 0) return "Coupon Free Booking";
+    if (mode === "Razorpay") return "Online Payment Required";
     if (mode === "UPI Payment Done" && screenshot) return "Payment Under Review";
     if (mode === "Will Pay Later") return "Payment Pending";
     return "Pending";
@@ -411,6 +413,67 @@
     bindBookButtons();
   }
 
+
+  async function startRazorpayPayment(booking) {
+    if (!window.Razorpay) {
+      throw new Error("Razorpay checkout script is not loaded. Check internet connection and batches.html script tag.");
+    }
+
+    const orderData = await apiFetch("/api/razorpay/create-order", {
+      method: "POST",
+      body: JSON.stringify({
+        bookingId: booking.bookingId,
+        trek: booking.trek,
+        date: booking.date,
+        members: booking.members,
+        couponCode: booking.couponCode
+      })
+    });
+
+    return await new Promise((resolve, reject) => {
+      const options = {
+        key: orderData.key,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency || "INR",
+        name: "The Green Trekkers",
+        description: booking.trek + " Booking",
+        order_id: orderData.order.id,
+        prefill: {
+          name: booking.customerName,
+          email: booking.email,
+          contact: booking.phone
+        },
+        notes: {
+          bookingId: booking.bookingId,
+          trek: booking.trek,
+          date: booking.date
+        },
+        theme: {
+          color: "#2f7d32"
+        },
+        handler: async function (response) {
+          try {
+            const verify = await apiFetch("/api/razorpay/verify-payment", {
+              method: "POST",
+              body: JSON.stringify(response)
+            });
+            resolve(verify);
+          } catch (error) {
+            reject(error);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            reject(new Error("Payment cancelled. Booking was not saved."));
+          }
+        }
+      };
+
+      const razorpay = new Razorpay(options);
+      razorpay.open();
+    });
+  }
+
   function buildWhatsappMessage(booking) {
     const membersText = (booking.memberDetails || []).map((m, i) => `${i + 1}. ${m.name} (${m.age})`).join("; ");
     return ["Hello The Green Trekkers, I want to confirm my trek booking.", "", "Booking ID: " + booking.bookingId, "Name: " + booking.customerName, "Email: " + booking.email, "Phone: " + booking.phone, "Trek: " + booking.trek, "Batch Date: " + booking.date, "Members: " + booking.members, "Member Details: " + membersText, "Price Per Person: " + booking.price, "Total Amount: " + rupee.format(booking.total), "Pickup Point: " + booking.pickup, "Drop Point: " + (booking.dropPoint || "Not selected"), "Payment Mode: " + booking.paymentMode, "Payment Status: " + booking.paymentStatus, "Payment Screenshot: " + (booking.paymentScreenshot || "Not uploaded")].join("\n");
@@ -443,7 +506,7 @@
       couponCodeInput.addEventListener("input", () => { if (!couponCodeInput.value.trim()) { appliedCoupon = { code: "", percent: 0 }; showMessage(couponMessage, "", false); updateTotal(); } });
       couponCodeInput.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); applyCoupon(true); } });
     }
-    if (paymentScreenshot) paymentScreenshot.addEventListener("change", () => { const fileName = getScreenshotFileName(); if (screenshotName) screenshotName.textContent = fileName ? "Uploaded: " + fileName : "Optional for 'Will Pay Later'. Required after UPI payment."; updateSummary(); });
+    if (paymentScreenshot) paymentScreenshot.addEventListener("change", () => { const fileName = getScreenshotFileName(); if (screenshotName) screenshotName.textContent = fileName ? "Uploaded: " + fileName : "No screenshot needed. Razorpay payment is verified automatically."; updateSummary(); });
     if (termsConsent) { termsConsent.addEventListener("change", updatePaymentVisibility); updatePaymentVisibility(); }
 
     bookingForm.addEventListener("submit", async (event) => {
@@ -465,10 +528,17 @@
       if (memberDetails.length !== members || memberDetails.some(m => m.name.length < 2 || !m.age || m.age < 5 || m.age > 75)) return showMessage(bookingMessage, "Please enter valid name and age for every member.", true);
       if (getAvailableSeats() < members) return showMessage(bookingMessage, `Only ${getAvailableSeats()} seats are available. Please reduce members.`, true);
       if (!termsConsent || !termsConsent.checked) return showMessage(bookingMessage, "Please read and accept the participant consent before proceeding to payment and confirmation.", true);
-      if (total > 0 && !paymentMode) return showMessage(bookingMessage, "Please select payment status.", true);
-      if (total > 0 && paymentMode === "UPI Payment Done" && !paymentScreenshotName) return showMessage(bookingMessage, "Please upload your payment screenshot after UPI payment.", true);
-      const booking = { bookingId, trek, date, price, members, memberDetails, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email, phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : paymentMode, paymentStatus: statusFromMode(paymentMode, paymentScreenshotName, total), paymentScreenshot: paymentScreenshotName, consentAccepted: true, termsAcceptedAt: new Date().toISOString(), bookedAt: new Date().toISOString() };
+      if (total > 0 && !window.Razorpay) return showMessage(bookingMessage, "Razorpay is not loaded. Please check internet connection and try again.", true);
+      const booking = { bookingId, trek, date, price, members, memberDetails, amount, subtotal: totals.subtotal, couponCode: appliedCoupon.code || "", couponPercent: appliedCoupon.percent || 0, discountAmount: totals.discount, total, customerName, email, phone, pickup, dropPoint, paymentMode: total === 0 ? "Coupon / Free Booking" : "Razorpay", paymentStatus: total === 0 ? "Coupon Free Booking" : "Paid", paymentScreenshot: "", consentAccepted: true, termsAcceptedAt: new Date().toISOString(), bookedAt: new Date().toISOString() };
       try {
+        if (total > 0) {
+          showMessage(bookingMessage, "Opening Razorpay payment popup...", false);
+          const paymentResult = await startRazorpayPayment(booking);
+          booking.razorpayPaymentId = paymentResult.paymentId;
+          booking.razorpayOrderId = paymentResult.orderId;
+          booking.paymentMode = "Razorpay";
+          booking.paymentStatus = "Paid";
+        }
         const savedBooking = await apiFetch("/api/bookings", { method: "POST", body: JSON.stringify(booking) });
         Object.assign(booking, savedBooking);
         let emailSent = false;
@@ -509,7 +579,7 @@
   }
 
   if (newBookingBtn && bookingForm) newBookingBtn.addEventListener("click", () => {
-    bookingForm.reset(); appliedCoupon = { code: "", percent: 0 }; if (couponMessage) showMessage(couponMessage, "", false); if (selectedAmount) selectedAmount.value = "1199"; if (membersInput) membersInput.value = "1"; if (bookingIdInput) bookingIdInput.value = generateBookingId(); if (whatsappBtn) whatsappBtn.classList.add("hidden"); if (downloadTicketBtn) downloadTicketBtn.classList.add("hidden"); if (screenshotName) screenshotName.textContent = "Accept consent first, then select payment option."; renderMemberDetails(); updateTotal(); updateTrekDetails(); updatePaymentVisibility(); if (confirmationBox) confirmationBox.classList.add("hidden"); showMessage(bookingMessage, "", false); bookingForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    bookingForm.reset(); appliedCoupon = { code: "", percent: 0 }; if (couponMessage) showMessage(couponMessage, "", false); if (selectedAmount) selectedAmount.value = "1199"; if (membersInput) membersInput.value = "1"; if (bookingIdInput) bookingIdInput.value = generateBookingId(); if (whatsappBtn) whatsappBtn.classList.add("hidden"); if (downloadTicketBtn) downloadTicketBtn.classList.add("hidden"); if (screenshotName) screenshotName.textContent = "No screenshot needed. Razorpay payment is verified automatically."; renderMemberDetails(); updateTotal(); updateTrekDetails(); updatePaymentVisibility(); if (confirmationBox) confirmationBox.classList.add("hidden"); showMessage(bookingMessage, "", false); bookingForm.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   if (downloadTicketBtn) downloadTicketBtn.addEventListener("click", () => downloadReceiptPdf(lastConfirmedBooking || readJSON("greenTrekkersLastBooking", null)));
 
